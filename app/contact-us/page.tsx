@@ -22,11 +22,7 @@ export default function ContactUs() {
           {/* Form container */}
           <section className="mt-8 sm:mt-10 bg-white">
             <form
-              // hook up onSubmit or action as needed
-              onSubmit={(e) => {
-                e.preventDefault();
-                // handle submit
-              }}
+             
               className="w-full"
             >
               {/* grid: single column on mobile, two columns on md+ */}
