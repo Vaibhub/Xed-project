@@ -1,0 +1,65 @@
+[
+  {
+    "id": "john-kallelil",
+    "name": "John Kallelil",
+    "role": "Founder, Promoter, Managing Director",
+    "shortBio": "John Kallelil is the Founder and Managing Director of XED, with over two decades of diverse experience in operations, project management, and executive education. He has played a pivotal role in designing and delivering leadership programs across global business hubs.",
+    "fullBio": "John Kallelil is the Founder and Managing Director of XED, with over two decades of diverse experience in operations, project management, and executive education. He has played a pivotal role in designing and delivering leadership programs across global business hubs - from Shanghai to Abu Dhabi to New York. As a Faculty Director, John has collaborated with several Fortune 500 organizations, enabling senior leaders to enhance performance and resilience in an evolving business landscape. He holds an MBA from the Indian School of Business, Hyderabad (Class of 2009), and also enjoys alumni benefits from Columbia Business School, New York.",
+    "imageSrc": "https://xedinstitute.org/wp-content/uploads/2025/08/b5330029-47b3-4857-a7ee-5af0d8075c5b.png",
+    "linkedinUrl": "https://www.linkedin.com/in/johnjohn/"
+  },
+  {
+    "id": "meenu-john",
+    "name": "Meenu John",
+    "role": "Promoter, Non-Executive Non-Independent Director",
+    "shortBio": "Meenu John serves as a Promoter at XED and leads the company’s U.S. operations. With a Bachelor’s degree in Chemistry and an MBA in Marketing, she brings analytical and strategic expertise, and a background in banking.",
+    "fullBio": "Meenu John serves as a Promoter at XED and leads the company’s U.S. operations. With a Bachelor’s degree in Chemistry and an MBA in Marketing, she brings a unique blend of analytical and strategic expertise. A former banker, Meenu has played a pivotal role in establishing XED’s presence in the United States. Her commitment to operational excellence and cross-border growth has been central to strengthening XED’s global footprint and expanding its international reach.",
+    "imageSrc": "https://xedinstitute.org/wp-content/uploads/2025/08/IMG_5972-768x805.jpeg",
+    "linkedinUrl": null
+  },
+  {
+    "id": "ravi-ajmera",
+    "name": "Ravi Ajmera",
+    "role": "Nominee Director",
+    "shortBio": "Ravi Ajmera is a seasoned professional with diverse experience in finance and consulting. He is Director and Founding Partner of Udaan Consultants and Advisors and has a background in investment banking and consulting.",
+    "fullBio": "Ravi Ajmera is a seasoned professional with diverse experience in finance and consulting. As the Director and Founding Partner of Udaan Consultants and Advisors, he leverages his expertise in business strategy, financial analysis, and management consulting. With a background in investment banking and experience working with companies like Nomura Securities and ESDS Software Solution, Ravi has developed strong skills in business transformation, strategic planning, and analytics. He holds education from institutions like Cornell Tech and Case Western Reserve University.",
+    "imageSrc": "https://xedinstitute.org/wp-content/uploads/2025/08/27f14434-f77e-4e9e-b2f4-d5ef320135be-e1755179555686-1-768x745.png",
+    "linkedinUrl": "https://www.linkedin.com/in/raviajmera/"
+  },
+  {
+    "id": "dr-john-mathew",
+    "name": "Dr. John Mathew Varikkavelil",
+    "role": "Independent Director",
+    "shortBio": "Independent Director with over 40 years of experience, including extensive tenure with the HDFC group and in consulting. Recognized as an expert in Anti-Money Laundering.",
+    "fullBio": "He is an Independent Director with over 40 years of experience, including extensive tenure with the HDFC group and in consulting. He holds a doctorate from the University of Hertfordshire (UK) and is a certified member of the Institute of Risk Management (IRM), UK. In addition, he is a Certified Anti-Money Laundering Specialist (CAMS), USA, and has completed the Executive Program in Management (EPM) at Columbia University. He is widely recognized as an expert in Anti-Money Laundering.",
+    "imageSrc": "https://xedinstitute.org/wp-content/uploads/2025/08/8a9850bf-d374-42b2-957f-1b3a34917bea.png",
+    "linkedinUrl": "linkedin.com/in/vjohnmathews"
+  },
+  {
+    "id": "prerna-wadikar",
+    "name": "Prerna Pramod Wadikar",
+    "role": "Independent Director",
+    "shortBio": "Independent Director with 18 years of leadership experience and expertise in ESG and Impact Investing. Holds PGPPM from IIM Bangalore and an MBA from the University of Oxford.",
+    "fullBio": "She is an Independent Director with 18 years of leadership experience and deep expertise in ESG and Impact Investing. She holds a Post Graduate Program in Public Policy and Management (PGPPM) from IIM Bangalore and an MBA from the University of Oxford. She serves as an advisor to G20 global institutions on economic systems transformation and is the Founding Program Director of the School of Ultimate Leadership. Additionally, she is an Adjunct Professor at both IIM Bangalore and IIT Gandhinagar.",
+    "imageSrc": "https://xedinstitute.org/wp-content/uploads/2025/08/1710693229947.jpeg",
+    "linkedinUrl": "linkedin.com/in/prernaw"
+  },
+  {
+    "id": "piyush-agrawal",
+    "name": "Piyush Agrawal",
+    "role": "Chief Financial Officer (CFO)",
+    "shortBio": "CFO at XED with over 20 years of experience in corporate finance, focused on helping SMEs and startups raise capital. Held roles at ICICI Bank, Intellecap, and KIPCO Group.",
+    "fullBio": "He is Chief Financial Officer (CFO) at XED, brings over 20 years of rich experience in corporate finance, with a strong focus on helping SMEs and startups raise capital across various stages of growth. He has held key roles at reputed institutions including ICICI Bank, Intellecap, and the KIPCO Group, where he contributed to strategic fundraising, financial structuring, and advisory services. Piyush holds a Bachelor’s degree in Engineering and an MBA (Finance) from TAPMI.",
+    "imageSrc": "https://xedinstitute.org/wp-content/uploads/2025/08/Piyush-Profile-Pic-1-768x768.jpg",
+    "linkedinUrl": "https://www.linkedin.com/in/piyush-agrawal-197a602/"
+  },
+  {
+    "id": "archana-gupta",
+    "name": "Archana Gupta",
+    "role": "Company Secretary and Compliance Officer",
+    "shortBio": "Company Secretary and Compliance Officer with experience handling ROC compliances and LODR/stock exchange matters for listed and other companies.",
+    "fullBio": "She is Company Secretary and Compliance Officer with 3 years of experience in handling ROC compliances and over 1 year in managing LODR, stock exchange, and various corporate matters for listed and other Companies. Skilled in drafting policies, shareholder management and event-based compliances.",
+    "imageSrc": "https://xedinstitute.org/wp-content/uploads/2025/08/Archana-Gupta-1-1-768x768.jpg",
+    "linkedinUrl": "https://www.linkedin.com/in/acsgupta/"
+  }
+]

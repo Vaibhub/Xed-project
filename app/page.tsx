@@ -1,65 +1,88 @@
-import Image from "next/image";
+"use client";
+import ExplorePrograms from "./components/ExplorePrograms";
+import HeroSection from "./components/HeroSections";
+import UpskillForm from "./components/UpskillForm";
+import { useEffect, useState } from "react";
+import {
+  loadAlumniSpeak,
+  loadCollegeLogos,
+  loadDayPrograms,
+  loadNews,
+  loadPrograms,
+  loadTestimonials,
+} from "@/app/loadPrograms";
+import { DayProgram, Program } from "./types/program";
+import CollegeWeProvide from "./components/Home/sections/slider-university-work";
+import SeriesPrograms from "./components/Home/sections/SeriesPrograms";
+import WhyWeAreBest from "./components/Home/sections/WhyWeAreBest";
+import ParticipantWork from "./components/Home/sections/participant-work";
+import AlumniSpeak from "./components/Home/sections/AlumniSpeak";
+import TestimonialSlider from "./components/Home/sections/Testimonials";
+import NewsCarousel from "./components/Home/sections/NewsCarousel";
 
-export default function Home() {
+export const HomePage = () => {
+  const [programs, setPrograms] = useState<Program[]>([]);
+  const [apiError, setApiError] = useState(false);
+  const [dayPrograms, setDayPrograms] = useState<DayProgram[]>([]);
+  const [alumniSpeak, setAlumniSpeak] = useState<Program[]>([]);
+  const [news, setNews] = useState<Program[]>([]);
+  const [testimonials, setTestimonials] = useState<any[]>([]);
+  const [collegeLogos, setCollegeLogos] = useState<Program[]>([]);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [
+          programsRes,
+          dayProgramsRes,
+          alumniSpeakRes,
+          newsRes,
+          testimonialsRes,
+          collegeLogosRes,
+        ]: any = await Promise.all([
+          loadPrograms(),
+          loadDayPrograms(),
+          loadAlumniSpeak(),
+          loadNews(),
+          loadTestimonials(),
+          loadCollegeLogos(),
+        ]);
+
+        setPrograms(programsRes);
+        setDayPrograms(dayProgramsRes);
+        setAlumniSpeak(alumniSpeakRes);
+
+        setNews(newsRes);
+        setTestimonials(testimonialsRes);
+        setCollegeLogos(collegeLogosRes);
+        setApiError(false);
+      } catch (error) {
+        setApiError(true);
+        setPrograms([]);
+        setDayPrograms([]);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  const data = {
+    title: "Discover & Enroll",
+    subtitle: "Explore Our Programs",
+  };
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
+    <div>
+      <HeroSection />
+      <CollegeWeProvide collegeLogos={collegeLogos} />
+      <ExplorePrograms programs={programs} apiError={apiError} data={data} />
+      <SeriesPrograms universityDayPrograms={dayPrograms} />
+      <WhyWeAreBest />
+      <TestimonialSlider testimonials={testimonials} />
+      <ParticipantWork />
+      <AlumniSpeak alumniSpeak={alumniSpeak} />
+      <UpskillForm />
+      <NewsCarousel news={news} />
     </div>
   );
-}
+};
+
+export default HomePage;
