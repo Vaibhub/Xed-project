@@ -1,13 +1,16 @@
-import { MapPin } from "lucide-react";
+import { Map, MapIcon, MapPin } from "lucide-react";
 import Link from "next/link";
 
 export default function Footer() {
   return (
     <footer className="bg-white border-t pt-12 pb-6">
-      <div className="max-w-7xl mx-auto px-4 grid lg:grid-cols-4 gap-10">
+      <div className="max-w-7xl mx-auto px-4">
+                        <img src="/logo-footer.png" alt="XED" className="w-20 mb-6" />
+
+      <div className=" grid lg:grid-cols-4 gap-10">
         {/* Logo + Useful Links */}
+
         <div>
-          <img src="/logo.png" alt="XED" className="w-50 mb-6" />
 
           <h3 className="text-lg font-semibold mb-4">Useful Links</h3>
           <ul className="space-y-2 text-gray-700">
@@ -44,21 +47,21 @@ export default function Footer() {
         {/* Address Section (Left) */}
         <div className="space-y-4 text-gray-700 text-sm leading-relaxed">
           <div>
-            <p className="font-medium flex flex-row gap-2">
+            <p className="text-black text-[16px] font-bold flex  flex-row gap-2">
               <MapPin /> USA
             </p>
             <p>146 W 29th St New York, NY 10001</p>
           </div>
 
           <div>
-            <p className="font-medium flex flex-row gap-2">
+            <p className="text-black text-[16px] font-bold flex flex-row gap-2">
               <MapPin /> Saudi Arabia
             </p>
             <p>RHOA8673, Kaab Ibn Malik, 2479, Al Mutamarat, Riyadh 12611</p>
           </div>
 
           <div>
-            <p className="font-medium flex flex-row gap-2">
+            <p className="text-black text-[16px] font-bold flex flex-row gap-2">
               <MapPin /> India (Mumbai)
             </p>
             <p>
@@ -71,21 +74,21 @@ export default function Footer() {
         {/* Address Section (Right) */}
         <div className="space-y-4 text-gray-700 text-sm leading-relaxed mt-8 lg:mt-0">
           <div>
-            <p className="font-medium flex flex-row gap-2">
+            <p className="text-black text-[16px] font-bold flex flex-row gap-2">
               <MapPin /> Singapore
             </p>
             <p>80 Robinson Road #15-02, Singapore, 068898</p>
           </div>
 
           <div>
-            <p className="font-medium flex flex-row gap-2">
-              <MapPin /> UAE
+            <p className="text-black text-[16px] font-bold flex flex-row gap-2">
+              <MapPin/> UAE
             </p>
             <p>Sector 5E, Plot C42 Freej Al Qbeesat St, Abu Dhabi - 22204</p>
           </div>
 
           <div>
-            <p className="font-medium flex flex-row gap-2">
+            <p className="text-black text-[16px] font-bold flex flex-row gap-2">
               <MapPin /> India (Gurgaon)
             </p>
             <p>Level 18, Tower A, Building 5, DLF Cyber City, Gurgaon 122002</p>
@@ -184,6 +187,7 @@ export default function Footer() {
             Privacy Policy
           </Link>
         </p>
+      </div>
       </div>
     </footer>
   );

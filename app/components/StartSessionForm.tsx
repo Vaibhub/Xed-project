@@ -1,5 +1,6 @@
 import { useState, FormEvent, ChangeEvent } from "react";
-
+import PhoneInput from "react-phone-input-2";
+import "react-phone-input-2/lib/style.css";
 /* =========================
    Types
 ========================= */
@@ -192,7 +193,7 @@ export default function SessionForm({ onSubmit }: SessionFormProps) {
           </label>
 
           <div className="flex gap-3">
-            <select
+            {/* <select
               aria-label="Country code"
               value={form.countryCode}
               onChange={(e: ChangeEvent<HTMLSelectElement>) =>
@@ -205,9 +206,24 @@ export default function SessionForm({ onSubmit }: SessionFormProps) {
                   {c.flag} {c.code}
                 </option>
               ))}
-            </select>
+            </select> */}
+            <div className="flex flex-col w-full">
+              <label className="font-medium mb-1">
+                Phone Number <span className="text-red-500">*</span>
+              </label>
 
-            <input
+              <PhoneInput
+                country="us"
+                value={form.phone}
+                onChange={(e: any) =>
+                  setForm({ ...form, phone: e.target.value })
+                }
+                placeholder="Enter phone number"
+                containerClass="w-full "
+                inputClass="!w-full !h-12"
+              />
+            </div>
+            {/* <input
               id="phone"
               name="phone"
               value={form.phone}
@@ -221,7 +237,7 @@ export default function SessionForm({ onSubmit }: SessionFormProps) {
                   ?.placeholder ?? "Phone number"
               }
               aria-invalid={!!errors.phone}
-            />
+            /> */}
           </div>
 
           {errors.phone && (
