@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 export default function CollegeWeProvide({
   collegeLogos,
 }: {
@@ -17,7 +19,7 @@ export default function CollegeWeProvide({
             <div className="college_logo">
               {/* First row */}
               {collegeLogos?.map((src, i) => (
-                <img
+                <Image
                   key={i}
                   src={src?.img}
                   alt={`logo-${i}`}
@@ -28,11 +30,11 @@ export default function CollegeWeProvide({
               ))}
 
               {/* Duplicate row for smooth infinite scroll */}
-              {collegeLogos.map((src, i) => (
-                <img
-                  key={`${i}-dup`}
-                  src={src}
-                  alt={`logo-dup-${i}`}
+              {collegeLogos?.map((src, i) => (
+                <Image
+                  key={i}
+                  src={src?.img}
+                  alt={`logo-${i}`}
                   width={150}
                   height={120}
                   className="logo_img"

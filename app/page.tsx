@@ -27,7 +27,7 @@ export const HomePage = () => {
   const [alumniSpeak, setAlumniSpeak] = useState<Program[]>([]);
   const [news, setNews] = useState<Program[]>([]);
   const [testimonials, setTestimonials] = useState<any[]>([]);
-  const [collegeLogos, setCollegeLogos] = useState<Program[]>([]);
+  const [collegeLogos, setCollegeLogos] = useState<any[]>([]);
   useEffect(() => {
     const fetchData = async () => {
       try {
