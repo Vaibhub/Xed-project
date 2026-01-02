@@ -17,7 +17,6 @@ export default async function HomePage() {
     title: "Discover & Enroll",
     subtitle: "Explore Our Programs",
   };
-
   return (
     <div>
       <HeroSection />
