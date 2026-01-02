@@ -1,7 +1,7 @@
 "use client"
 import { useEffect, useState } from "react";
 import { loadPrograms } from "../loadPrograms";
-import { Program } from "../types/program";
+import { Program } from "../types/programs";
 import HeroCommon from "../components/Hero";
 import ExplorePrograms from "../components/ExplorePrograms";
 
