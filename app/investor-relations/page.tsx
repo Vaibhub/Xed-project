@@ -6,12 +6,12 @@ export default function InvestorRelations({ bgImage = "/investor.png" }) {
   const navigate = useRouter();
   return (
     <section
-      className="min-h-screen w-full bg-cover bg-center bg-no-repeat flex items-center justify-center"
+  className="relative min-h-screen w-full bg-cover bg-center bg-no-repeat flex items-center justify-center"
       style={{
         backgroundImage: `url(${bgImage})`,
       }}
     >
-      <div className="bg-black/80 w-full  absolute inset-0"></div>
+  <div className="absolute inset-0 bg-black/80"></div>
 
       <div className="relative z-10 w-full max-w-7xl rounded-md overflow-hidden shadow-xl grid grid-cols-1 lg:grid-cols-3">
         {/* LEFT SIDE */}

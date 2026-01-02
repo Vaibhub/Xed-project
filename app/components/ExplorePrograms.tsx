@@ -43,7 +43,7 @@ export default function ExplorePrograms({ programs, apiError , data}: Props) {
       </section>
     );
   }
-  // ⭐ FILTER LOGIC
+  
   const filteredPrograms = programs.filter((p) => {
     const matchesCategory =
       activeCategory === "All" || p.category === activeCategory;
