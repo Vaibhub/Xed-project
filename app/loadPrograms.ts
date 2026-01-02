@@ -5,13 +5,10 @@ const API_URL = "https://xite.xedinstitute.org/api/cohorts";
 const API_KEY = "key_AsdewDax524DASF234233";
 
 export async function loadPrograms(): Promise<Program[]> {
-  const res = await fetch(API_URL, {
-    headers: {
-      Authorization: `Bearer ${API_KEY}`,
-    },
-  });
-  const json = await res.json();
-  return json.data || [];
+   const res = await fetch("http://localhost:4000/dayPrograms");
+  return res.json();
+  
+  
 }
 
 export async function loadDayPrograms(): Promise<Program[]> {

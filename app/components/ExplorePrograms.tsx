@@ -269,7 +269,7 @@ export default function ExplorePrograms({ programs, apiError, data }: Props) {
         p.fees && p.fees.length > 0
           ? `${p.fees[0].currency.symbol}${p.fees[0].amount}`
           : "Fee on request",
-      image: "/home/programs/1.png", // later media se dynamic kar sakte ho
+      image: p?.media_section?.university_banner_url || "/home/programs/1.png", // later media se dynamic kar sakte ho
     }));
   }, [programs]);
 
