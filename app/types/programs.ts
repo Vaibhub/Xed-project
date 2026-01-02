@@ -34,4 +34,7 @@ export interface Program {
   program: ProgramMeta;
   created_at: string;
   updated_at: string;
+  media_section?: {
+    university_banner_url?: string;
+  };
 }
