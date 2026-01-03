@@ -34,13 +34,9 @@ export default async function HomePage() {
   return (
     <div>
       <HeroSection />
-            <CollegeWeProvide collegeLogos={collegeLogos} />
+      <CollegeWeProvide collegeLogos={collegeLogos} />
 
-      <ExplorePrograms
-        programs={programs}
-        apiError={apiError}
-        data={data}
-      />
+      <ExplorePrograms programs={programs} apiError={apiError} data={data} />
       <SeriesPrograms universityDayPrograms={dayPrograms} />
       <WhyWeAreBest />
       <TestimonialSlider testimonials={testimonials} />

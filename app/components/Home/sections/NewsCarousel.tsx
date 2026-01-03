@@ -1,44 +1,16 @@
 
 "use client";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation } from "swiper/modules";
+import { Navigation, Autoplay } from "swiper/modules";
+import { useState } from "react";
+
+// Import Swiper styles
+import "swiper/css";
+import "swiper/css/navigation";
 
 export default function NewsCarousel({news}: {news: any[]}) {
-  // const testimonials = [
-  //   {
-  //     img: "/home/news/1.png",
-  //   },
-  //   {
-  //     img: "/home/news/2.png",
-  //   },
-  //   {
-  //     img: "/home/news/3.png",
-  //   },
-  //   {
-  //     img: "/home/news/4.png",
-  //   },
-  //   {
-  //     img: "/home/news/5.png",
-  //   },
-  //   {
-  //     img: "/home/news/6.png",
-  //   },
-  //   {
-  //     img: "/home/news/7.png",
-  //   },
-  //   {
-  //     img: "/home/news/8.png",
-  //   },
-  //   {
-  //     img: "/home/news/9.png",
-  //   },
-  //   {
-  //     img: "/home/news/10.png",
-  //   },
-  //   {
-  //     img: "/home/news/11.png",
-  //   }
-  // ];
+  const [prevEl, setPrevEl] = useState<HTMLElement | null>(null);
+  const [nextEl, setNextEl] = useState<HTMLElement | null>(null);
 
   return (
     <section className="py-16 bg-gray-100">
@@ -53,17 +25,21 @@ export default function NewsCarousel({news}: {news: any[]}) {
 
           {/* Navigation Arrows Top-Right */}
           <div className="flex gap-3">
-            <div className="swiper-button-prev !static !relative !top-0 !left-0"></div>
-            <div className="swiper-button-next !static !relative !top-0 !left-0"></div>
+            <div ref={(node) => setPrevEl(node)} className="swiper-button-prev !static !relative !top-0 !left-0"></div>
+            <div ref={(node) => setNextEl(node)} className="swiper-button-next !static !relative !top-0 !left-0"></div>
           </div>
         </div>
 
         {/* Slider */}
         <Swiper
-          modules={[Navigation]}
+          modules={[Navigation, Autoplay]}
           navigation={{
-            nextEl: ".swiper-button-next",
-            prevEl: ".swiper-button-prev",
+            prevEl,
+            nextEl,
+          }}
+          autoplay={{
+            delay: 4000,
+            disableOnInteraction: false,
           }}
           spaceBetween={20}
           slidesPerView={3}

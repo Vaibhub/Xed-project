@@ -1,12 +1,15 @@
 "use client";
-
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation } from "swiper/modules";
-import { useRef } from "react";
+import { Navigation, Autoplay } from "swiper/modules";
+import { useState } from "react";
+
+// Import Swiper styles
+import "swiper/css";
+import "swiper/css/navigation";
 
 export default function EventsSlider({ events }: { events: any[] }) {
-  const prevRef = useRef<HTMLDivElement | null>(null);
-  const nextRef = useRef<HTMLDivElement | null>(null);
+  const [prevEl, setPrevEl] = useState<HTMLElement | null>(null);
+  const [nextEl, setNextEl] = useState<HTMLElement | null>(null);
 
   return (
     <section className="py-16 bg-gray-100">
@@ -18,25 +21,23 @@ export default function EventsSlider({ events }: { events: any[] }) {
 
           {/* Navigation Arrows */}
           <div className="flex gap-3">
-            <div ref={prevRef} className="swiper-button-prev !static"></div>
-            <div ref={nextRef} className="swiper-button-next !static"></div>
+            <div ref={(node) => setPrevEl(node)} className="swiper-button-prev !static"></div>
+            <div ref={(node) => setNextEl(node)} className="swiper-button-next !static"></div>
           </div>
         </div>
 
         <Swiper
-          modules={[Navigation]}
+          modules={[Navigation, Autoplay]}
           loop={true}
           spaceBetween={20}
           slidesPerView={3}
-          navigation={{
-            prevEl: prevRef.current,
-            nextEl: nextRef.current,
+          autoplay={{
+            delay: 3000,
+            disableOnInteraction: false,
           }}
-          onBeforeInit={(swiper) => {
-            // @ts-ignore
-            swiper.params.navigation.prevEl = prevRef.current;
-            // @ts-ignore
-            swiper.params.navigation.nextEl = nextRef.current;
+          navigation={{
+            prevEl,
+            nextEl,
           }}
           breakpoints={{
             320: { slidesPerView: 1 },
