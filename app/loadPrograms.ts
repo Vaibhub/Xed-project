@@ -1,42 +1,42 @@
-import { Program } from "./types/programs";
+import {
+  programs,
+  dayPrograms,
+  alumniSpeak,
+  news,
+  events,
+  webinars,
+  testimonials,
+  collegeLogos,
+} from "./data";
 
-
-const API_URL = "https://xite.xedinstitute.org/api/cohorts";
-const API_KEY = "key_AsdewDax524DASF234233";
-
-export async function loadPrograms(): Promise<Program[]> {
-   const res = await fetch("http://localhost:4000/dayPrograms");
-  return res.json();
-  
-  
-}
-
-export async function loadDayPrograms(): Promise<Program[]> {
-  const res = await fetch("http://localhost:4000/dayPrograms");
-  return res.json();
+export async function loadPrograms(): Promise<any[]> {
+  return programs;
 }
 
-export async function loadAlumniSpeak(): Promise<Program[]> {
-  const res = await fetch("http://localhost:4000/alumni-speak");
-  return res.json();
+export async function loadDayPrograms(): Promise<any[]> {
+  return dayPrograms;
 }
-export async function loadNews(): Promise<Program[]> {
-  const res = await fetch("http://localhost:4000/news");
-  return res.json();
+
+export async function loadAlumniSpeak(): Promise<any[]> {
+  return alumniSpeak;
 }
-export async function loadEvents(): Promise<Program[]> {
-  const res = await fetch("http://localhost:4000/events");
-  return res.json();
+
+export async function loadNews(): Promise<any[]> {
+  return news;
 }
-export async function loadWebinars(): Promise<Program[]> {
-  const res = await fetch("http://localhost:4000/webinars");
-  return res.json();
+
+export async function loadEvents(): Promise<any[]> {
+  return events;
 }
-export async function loadTestimonials(): Promise<Program[]> {
-  const res = await fetch("http://localhost:4000/testimonials");
-  return res.json();
+
+export async function loadWebinars(): Promise<any[]> {
+  return webinars;
 }
-export async function loadCollegeLogos(): Promise<Program[]> {
-  const res = await fetch("http://localhost:4000/collegeLogos");
-  return res.json();
+
+export async function loadTestimonials(): Promise<any[]> {
+  return testimonials;
+}
+
+export async function loadCollegeLogos(): Promise<any[]> {
+  return collegeLogos;
 }

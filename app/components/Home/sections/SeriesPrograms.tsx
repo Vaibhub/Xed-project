@@ -5,7 +5,7 @@ import { Clock, MapPin, MoveUpRight, Calendar } from "lucide-react";
 interface SeriesProgramsProps {
   universityDayPrograms: DayProgram[];
 }
-export default function SeriesPrograms({universityDayPrograms}:SeriesProgramsProps) {
+export default function SeriesPrograms({universityDayPrograms}:any) {
 
   return (
     <section className="py-16 bg-gray-100">
@@ -16,7 +16,7 @@ export default function SeriesPrograms({universityDayPrograms}:SeriesProgramsPro
 
         {/* Program Cards */}
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {universityDayPrograms.map((p, i) => (
+          {universityDayPrograms.map((p:any, i:any) => (
             <Card
               key={i}
               className="rounded-xl overflow-hidden border hover:shadow-lg transition bg-white"
@@ -55,7 +55,7 @@ export default function SeriesPrograms({universityDayPrograms}:SeriesProgramsPro
                         Dates and Locations:
                       </p>
                       <ul className="list-disc pl-5 mt-1 space-y-1">
-                        {p.dates.map((d:any, idx) => (
+                        {p.dates.map((d:any, idx:any) => (
                           <li key={idx}>{d}</li>
                         ))}
                       </ul>

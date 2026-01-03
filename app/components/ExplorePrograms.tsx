@@ -277,16 +277,16 @@ export default function ExplorePrograms({ programs, apiError, data }: Props) {
      FILTERING
   ========================= */
   const filteredPrograms = useMemo(() => {
-    return programCards.filter((p) => {
+    return programCards?.filter((p) => {
       const matchesCategory =
         activeCategory === "All" ||
         p.title.toLowerCase().includes(activeCategory.toLowerCase());
 
-      const matchesSearch = p.title
-        .toLowerCase()
-        .includes(searchValue.toLowerCase());
+      // const matchesSearch = p?.title
+      //   .toLowerCase()
+      //   .includes(searchValue?.toLowerCase());
 
-      return matchesCategory && matchesSearch;
+      return matchesCategory ;
     });
   }, [programCards, activeCategory, searchValue]);
 
@@ -360,7 +360,7 @@ export default function ExplorePrograms({ programs, apiError, data }: Props) {
                         ? p.image
                         : "/home/programs/1.png"
                     }
-                    alt={p.title}
+                    alt="image"
                     className="w-full h-full object-cover p-4"
                   />
                 </div>
