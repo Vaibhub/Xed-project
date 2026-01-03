@@ -10,6 +10,17 @@ export interface Fee {
   currency: Currency;
 }
 
+export interface AcademicPartner {
+  id: string;
+  name: string;
+  display_name: string;
+  description: string;
+  logo_url: string;
+  address: string;
+  created_at: string;
+  updated_at: string;
+}
+
 export interface ProgramMeta {
   id: string;
   name: string;
@@ -17,6 +28,7 @@ export interface ProgramMeta {
   status: "ACTIVE" | "INACTIVE";
   type: "OPEN" | "CLOSED";
   description: string;
+  academic_partner: AcademicPartner;
 }
 
 export interface Program {
@@ -34,6 +46,11 @@ export interface Program {
   program: ProgramMeta;
   created_at: string;
   updated_at: string;
+
+  microsite_section?: {
+    custom_domain?: string;
+  };
+
   media_section?: {
     university_banner_url?: string;
   };

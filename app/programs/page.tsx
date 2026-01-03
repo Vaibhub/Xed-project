@@ -2,13 +2,14 @@ import { loadPrograms } from "../loadPrograms";
 import { Program } from "../types/programs";
 import HeroCommon from "../components/Hero";
 import ExplorePrograms from "../components/ExplorePrograms";
+import { fetchPrograms } from "@/lib/programs.server";
 
 export const ProgramsPage = async () => {
   let programs: Program[] = [];
   let apiError = false;
 
   try {
-    programs = await loadPrograms(); // ✅ using static data
+    programs = await fetchPrograms(); // ✅ clean call
   } catch (error) {
     apiError = true;
   }
