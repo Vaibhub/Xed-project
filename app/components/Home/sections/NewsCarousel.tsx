@@ -55,10 +55,12 @@ export default function NewsCarousel({news}: {news: any[]}) {
             <SwiperSlide key={i}>
               <div className="bg-white rounded-xl border p-6 h-full flex flex-col justify-between">
                 <div className="mt-6 pt-6  flex items-center gap-3">
+                  <a href={t.link} target="_blank" rel="noopener noreferrer">
                   <img
                     src={t.img}
                     className="w-full h-full  object-cover"
                   />
+                  </a>
                 </div>
               </div>
             </SwiperSlide>

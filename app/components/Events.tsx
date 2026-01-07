@@ -1,28 +1,29 @@
 "use client";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Autoplay } from "swiper/modules";
-import { useState } from "react";
+import { ChevronLeft, ChevronRight } from "lucide-react"; // Optional: for nice icons
 
 // Import Swiper styles
 import "swiper/css";
 import "swiper/css/navigation";
 
 export default function EventsSlider({ events }: { events: any[] }) {
-  const [prevEl, setPrevEl] = useState<HTMLElement | null>(null);
-  const [nextEl, setNextEl] = useState<HTMLElement | null>(null);
-
   return (
     <section className="py-16 bg-gray-100">
-      <div className="px-4">
+      <div className="px-4 max-w-7xl mx-auto">
+        
+        {/* Heading & Custom Controls */}
+        <div className="flex justify-between items-center mb-8">
+          <h2 className="text-3xl font-bold text-gray-800">Events</h2>
 
-        {/* Heading */}
-        <div className="flex justify-between items-center mb-8 max-w-7xl mx-auto">
-          <h2 className="text-3xl font-bold">Events</h2>
-
-          {/* Navigation Arrows */}
-          <div className="flex gap-3">
-            <div ref={(node) => setPrevEl(node)} className="swiper-button-prev !static"></div>
-            <div ref={(node) => setNextEl(node)} className="swiper-button-next !static"></div>
+          {/* Navigation Arrows using Tailwind */}
+          <div className="flex gap-2">
+            <button className="event-prev-btn bg-white p-2 rounded-full shadow-md hover:bg-blue-600 hover:text-white transition-colors disabled:opacity-50">
+              <ChevronLeft size={24} />
+            </button>
+            <button className="event-next-btn bg-white p-2 rounded-full shadow-md hover:bg-blue-600 hover:text-white transition-colors disabled:opacity-50">
+              <ChevronRight size={24} />
+            </button>
           </div>
         </div>
 
@@ -30,14 +31,14 @@ export default function EventsSlider({ events }: { events: any[] }) {
           modules={[Navigation, Autoplay]}
           loop={true}
           spaceBetween={20}
-          slidesPerView={3}
           autoplay={{
             delay: 3000,
             disableOnInteraction: false,
           }}
+          // Reference the class names directly
           navigation={{
-            prevEl,
-            nextEl,
+            prevEl: ".event-prev-btn",
+            nextEl: ".event-next-btn",
           }}
           breakpoints={{
             320: { slidesPerView: 1 },
@@ -45,18 +46,21 @@ export default function EventsSlider({ events }: { events: any[] }) {
             1024: { slidesPerView: 3 },
             1280: { slidesPerView: 4 },
           }}
+          className="rounded-lg"
         >
           {events.map((e, i) => (
             <SwiperSlide key={i}>
-              <div className="rounded-xl overflow-hidden">
+              <div className="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow h-full">
                 <img
                   src={e.img}
-                  className="w-full h-full object-contain"
-                  alt=""
+                  className="w-full  object-cover" // Changed to object-cover for better UI
+                  alt={e.description || "event"}
                 />
-                <p className="mt-4 px-3 pb-5 text-md font-semibold">
-                  {e.description}
-                </p>
+                <div className="p-4">
+                  <p className="text-md font-semibold text-gray-700 line-clamp-2">
+                    {e.description}
+                  </p>
+                </div>
               </div>
             </SwiperSlide>
           ))}

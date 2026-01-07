@@ -26,7 +26,7 @@ export default function SeriesPrograms({universityDayPrograms}:any) {
                 <img
                   src={p.img}
                   alt={p.title}
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-contain"
                 />
               </div>
 
