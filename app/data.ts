@@ -311,17 +311,17 @@ export const alumniSpeak = [
 ];
 
 export const news = [
-  { "img": "/home/news/1.png" },
-  { "img": "/home/news/2.png" },
-  { "img": "/home/news/3.png" },
-  { "img": "/home/news/4.png" },
-  { "img": "/home/news/5.png" },
-  { "img": "/home/news/6.png" },
-  { "img": "/home/news/7.png" },
-  { "img": "/home/news/8.png" },
-  { "img": "/home/news/9.png" },
-  { "img": "/home/news/10.png" },
-  { "img": "/home/news/11.png" }
+  { "img": "/home/news/1.png", "link": "https://www.timesnownews.com/business-economy/budget/interim-budget-expectations-nirmala-sitharman-income-tax-live-live-updates-february-1-union-budget-pm-modi-80c-ppf-nps-liveblog-107222129" },
+  { "img": "/home/news/2.png" ,"link":"https://economictimes.indiatimes.com/news/how-to/how-to-develop-resilience-among-students-for-navigating-challenges/articleshow/107191342.cms"},
+  { "img": "/home/news/3.png","link":"https://www.indiatoday.in/education-today/featurephilia/story/are-ai-data-analytics-and-vr-redefining-learning-norms-2483237-2024-01-02" },
+  { "img": "/home/news/4.png" ,"link":"https://epaper.thestatesman.com/3796989/Delhi-The-Statesman/05-12-2023#page/11"},
+  { "img": "/home/news/5.png","link":"https://epaper.thestatesman.com/3796989/Delhi-The-Statesman/05-12-2023#page/11" },
+  { "img": "/home/news/6.png" ,"link":"https://epaper.thestatesman.com/3796989/Delhi-The-Statesman/05-12-2023#page/11"},
+  { "img": "/home/news/7.png","link":"https://epaper.thestatesman.com/3796989/Delhi-The-Statesman/05-12-2023#page/11" },
+  { "img": "/home/news/8.png","link":"https://epaper.thestatesman.com/3796989/Delhi-The-Statesman/05-12-2023#page/11" },
+  { "img": "/home/news/9.png" ,"link":"https://epaper.thestatesman.com/3796989/Delhi-The-Statesman/05-12-2023#page/11" },
+  { "img": "/home/news/10.png","link":"https://epaper.thestatesman.com/3796989/Delhi-The-Statesman/05-12-2023#page/11" },
+  { "img": "/home/news/11.png" ,"link":"https://epaper.thestatesman.com/3796989/Delhi-The-Statesman/05-12-2023#page/11" },
 ];
 
 export const testimonials = [
