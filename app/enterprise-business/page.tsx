@@ -4,20 +4,10 @@ import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
 import { loadCollegeLogos } from "../loadPrograms";
 import CollegeWeProvide from "../components/Home/sections/slider-university-work";
+
 function EnterpriseBusinessPage() {
   const [value, setValue] = useState<any>("");
-  const [collegeLogos, setCollegeLogos] = useState<any[]>([]);
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const [collegeLogosRes]: any = await Promise.all([loadCollegeLogos()]);
-
-        setCollegeLogos(collegeLogosRes);
-      } catch (error) {}
-    };
-
-    fetchData();
-  }, []);
+ 
   return (
     <div className="w-full">
       <div className=" py-10">
@@ -195,7 +185,7 @@ function EnterpriseBusinessPage() {
           </div>
         </div>
       </section>
-      <CollegeWeProvide collegeLogos={collegeLogos} />
+      <CollegeWeProvide  />
     </div>
   );
 }
