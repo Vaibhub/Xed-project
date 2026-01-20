@@ -108,11 +108,28 @@ export default function SessionForm({ onSubmit }: SessionFormProps) {
 
     setLoading(true);
     try {
+      const res = await fetch("/api/send-email", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          to: "admin@xedinstitute.org", // Placeholder recipient
+          subject: "New Session Start Request",
+          text: `
+            Full Name: ${form.fullName}
+            Email: ${form.email}
+            Phone: ${form.phone}
+          `,
+        }),
+      });
+
+      const result = await res.json();
+
+      if (!res.ok || !result.success) {
+        throw new Error("Failed to send email");
+      }
+
       if (typeof onSubmit === "function") {
         await onSubmit({ ...form });
-      } else {
-        await new Promise((r) => setTimeout(r, 700));
-        console.log("Session start payload:", form);
       }
 
       setStatus("success");
@@ -215,8 +232,8 @@ export default function SessionForm({ onSubmit }: SessionFormProps) {
               <PhoneInput
                 country="us"
                 value={form.phone}
-                onChange={(e: any) =>
-                  setForm({ ...form, phone: e.target.value })
+                onChange={(value: string) =>
+                  setForm({ ...form, phone: value })
                 }
                 placeholder="Enter phone number"
                 containerClass="w-full "

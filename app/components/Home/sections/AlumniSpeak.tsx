@@ -5,6 +5,7 @@ import { useState } from "react";
 
 export default function AlumniSpeak() {
   const { data: alumniSpeak = [], isLoading } = useAlumniSpeaks();
+  const activeAlumni = alumniSpeak.filter((a: any) => a.is_active === "Y");
   const [playingIndex, setPlayingIndex] = useState<number | null>(null);
 
   if (isLoading) {
@@ -17,7 +18,7 @@ export default function AlumniSpeak() {
         <h2 className="text-4xl font-bold text-center mb-12">Alumni Speak</h2>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-10">
-          {alumniSpeak.map((a: any, i: number) => {
+          {activeAlumni.map((a: any, i: number) => {
             const embedURL = a.video_link
               ?.replace("watch?v=", "embed/")
               ?.replace("youtu.be/", "www.youtube.com/embed/")

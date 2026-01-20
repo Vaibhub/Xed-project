@@ -23,12 +23,11 @@ export default async function HomePage() {
   } catch (error) {
     apiError = true;
   }
-
+   console.log(programs)
   const data = {
     title: "Discover & Enroll",
     subtitle: "Explore Our Programs",
   };
-  console.log(programs,"======")
   return (
     <div>
       <HeroSection />

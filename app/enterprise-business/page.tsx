@@ -7,7 +7,49 @@ import CollegeWeProvide from "../components/Home/sections/slider-university-work
 
 function EnterpriseBusinessPage() {
   const [value, setValue] = useState<any>("");
- 
+  const [loading, setLoading] = useState(false);
+  const [formData, setFormData] = useState({
+    fullName: "",
+    organization: "",
+    email: "",
+    message: "",
+  });
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+
+    try {
+      const res = await fetch("/api/send-email", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          to: "sonusingh2218224@gmail.com",
+          subject: "New Enterprise Business Inquiry",
+          text: `
+            Full Name: ${formData.fullName}
+            Organization: ${formData.organization}
+            Email: ${formData.email}
+            Phone: ${value}
+            Message: ${formData.message}
+          `,
+        }),
+      });
+
+      if (res.ok) {
+        alert("Inquiry sent successfully ✅");
+        setFormData({ fullName: "", organization: "", email: "", message: "" });
+        setValue("");
+      } else {
+        alert("Failed to send inquiry ❌");
+      }
+    } catch (error) {
+      alert("An error occurred ❌");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="w-full">
       <div className=" py-10">
@@ -38,17 +80,33 @@ function EnterpriseBusinessPage() {
           <div className="col-span-12 md:col-span-5 bg-white px-12 py-16">
             <h2 className="text-3xl font-bold mb-10">Get in Touch</h2>
 
-            <form className="space-y-6">
+            <form className="space-y-6" onSubmit={handleSubmit}>
               {/* Row 1 */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                   <label className="block font-medium">Full Name *</label>
-                  <input type="text" className="w-full border p-3 rounded-md" />
+                  <input
+                    type="text"
+                    required
+                    value={formData.fullName}
+                    onChange={(e) =>
+                      setFormData({ ...formData, fullName: e.target.value })
+                    }
+                    className="w-full border p-3 rounded-md"
+                  />
                 </div>
 
                 <div>
                   <label className="block font-medium">Organization *</label>
-                  <input type="text" className="w-full border p-3 rounded-md" />
+                  <input
+                    type="text"
+                    required
+                    value={formData.organization}
+                    onChange={(e) =>
+                      setFormData({ ...formData, organization: e.target.value })
+                    }
+                    className="w-full border p-3 rounded-md"
+                  />
                 </div>
               </div>
 
@@ -72,6 +130,11 @@ function EnterpriseBusinessPage() {
                   <label className="block font-medium">Email *</label>
                   <input
                     type="email"
+                    required
+                    value={formData.email}
+                    onChange={(e) =>
+                      setFormData({ ...formData, email: e.target.value })
+                    }
                     className="w-full border p-3 rounded-md"
                   />
                 </div>
@@ -82,13 +145,21 @@ function EnterpriseBusinessPage() {
                 <label className="block font-medium">Message (Optional)</label>
                 <textarea
                   rows={4}
+                  value={formData.message}
+                  onChange={(e) =>
+                    setFormData({ ...formData, message: e.target.value })
+                  }
                   className="w-full border p-3 rounded-md"
                 ></textarea>
               </div>
 
               {/* Full width button */}
-              <button className=" px-10 text-center  text-white !bg-[#2873b8]  py-3 rounded-md font-semibold">
-                Submit
+              <button
+                type="submit"
+                disabled={loading}
+                className=" px-10 text-center  text-white !bg-[#2873b8]  py-3 rounded-md font-semibold disabled:opacity-50"
+              >
+                {loading ? "Submitting..." : "Submit"}
               </button>
             </form>
           </div>

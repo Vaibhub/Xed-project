@@ -10,12 +10,14 @@ import "swiper/css/navigation";
 
 export default function NewsCarousel() {
   const { data: news = [], isLoading } = useNews();
+  const activeNews = news.filter((item: any) => item.is_active === "Y");
   const [prevEl, setPrevEl] = useState<HTMLElement | null>(null);
   const [nextEl, setNextEl] = useState<HTMLElement | null>(null);
 
   if (isLoading) {
     return <div className="text-center py-16">Loading...</div>;
   }
+  console.log(news,"=====")
 
   return (
     <section className="py-16 bg-gray-100">
@@ -57,7 +59,7 @@ export default function NewsCarousel() {
             1280: { slidesPerView: 4 },
           }}
         >
-          {news.map((t: any) => (
+          {activeNews.map((t: any) => (
             <SwiperSlide key={t.id}>
               <div className="bg-white rounded-xl border p-4 h-full">
                 <a
