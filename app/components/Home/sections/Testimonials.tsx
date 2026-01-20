@@ -3,32 +3,23 @@
 import { useRef } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
+import { useTestimonials } from "@/app/hooks/useTestimonials";
 
 import "swiper/css";
 import "swiper/css/navigation";
 
 /* =========================
-   Types
-========================= */
-
-type Testimonial = {
-  text: string;
-  name: string;
-  role: string;
-  img: string;
-};
-
-type Props = {
-  testimonials: Testimonial[];
-};
-
-/* =========================
    Component
 ========================= */
 
-export default function TestimonialSlider({ testimonials }: Props) {
+export default function TestimonialSlider() {
+  const { data: testimonials = [], isLoading } = useTestimonials();
   const prevRef = useRef<HTMLDivElement | null>(null);
   const nextRef = useRef<HTMLDivElement | null>(null);
+
+  if (isLoading) {
+    return <div className="text-center py-16">Loading...</div>;
+  }
 
   return (
     <section className="py-16 bg-white">
@@ -80,22 +71,24 @@ export default function TestimonialSlider({ testimonials }: Props) {
             1280: { slidesPerView: 4 },
           }}
         >
-          {testimonials.map((t, i) => (
-            <SwiperSlide key={i}>
+          {testimonials.map((t: any) => (
+            <SwiperSlide key={t.id}>
               <div className="bg-white rounded-xl border p-6 h-[350px] flex flex-col justify-between">
                 <p className="text-lg leading-relaxed italic font-bold">
-                  “{t.text}”
+                  “{t.message}”
                 </p>
 
                 <div className="mt-6 pt-6 border-t flex items-center gap-3">
                   <img
-                    src={t.img}
+                    src={t.speaker_image?.trim()}
                     alt={t.name}
                     className="w-12 h-12 rounded-full object-cover"
                   />
                   <div>
                     <p className="font-semibold">{t.name}</p>
-                    <p className="text-sm text-gray-600">{t.role}</p>
+                    <p className="text-sm text-gray-600">
+                      {t.designation}
+                    </p>
                   </div>
                 </div>
               </div>

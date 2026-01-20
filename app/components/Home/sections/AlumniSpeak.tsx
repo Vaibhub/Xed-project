@@ -1,132 +1,45 @@
+"use client";
 
-
-"use client"
+import { useAlumniSpeaks } from "@/app/hooks/useAlumniSpeaks";
 import { useState } from "react";
 
-export default function AlumniSpeak({alumniSpeak}: {alumniSpeak: any[]}) {
+export default function AlumniSpeak() {
+  const { data: alumniSpeak = [], isLoading } = useAlumniSpeaks();
   const [playingIndex, setPlayingIndex] = useState<number | null>(null);
 
-  // const alumni = [
-  //   {
-  //     name: "Lama Albattain",
-  //     role: "Founder & COO",
-  //     company: "TBWA Worldwide",
-  //     batch: "Cornell SELP - Class of Oct' 2023",
-  //     video: "https://www.youtube.com/shorts/4PNUsD8wv3U",
-  //     thumb: "/home/alumni/1.png"
-  //   },
-  //   {
-  //     name: "Harold Tjiptadjaja",
-  //     role: "Managing Director - Investment Banking",
-  //     company: "Mandiri Sekuritas",
-  //     batch: "Cornell SELP - Class of Oct' 2023",
-  //     video: "https://www.youtube.com/shorts/XG60ORmjJYk",
-  //     thumb: "/home/alumni/2.png"
-  //   },
-  //   {
-  //     name: "Faisal Alkadi",
-  //     role: "Group Director",
-  //     company: "Althawaqh Food Company (AFCO)",
-  //     batch: "Cornell SELP - Class of Oct' 2023",
-  //     video: "https://www.youtube.com/shorts/fxXH5f8OU54",
-  //     thumb: "/home/alumni/3.png"
-  //   },
-  //   {
-  //     name: "Samar Mohammed Omar Al Saggaf",
-  //     role: "Professor",
-  //     company: "King AbdulAziz University",
-  //     batch: "Cornell SELP - Class of Oct' 2023",
-  //     video: "https://www.youtube.com/shorts/9hjymVDqeNU",
-  //     thumb: "/home/alumni/4.png"
-  //   },
-  //    {
-  //     name: "Samar Mohammed Omar Al Saggaf",
-  //     role: "Professor",
-  //     company: "King AbdulAziz University",
-  //     batch: "Cornell SELP - Class of Oct' 2023",
-  //     video: "https://www.youtube.com/watch?v=5QtxLFKyHU8",
-  //     thumb: "/home/alumni/5.png"
-  //   },
-  //    {
-  //     name: "Samar Mohammed Omar Al Saggaf",
-  //     role: "Professor",
-  //     company: "King AbdulAziz University",
-  //     batch: "Cornell SELP - Class of Oct' 2023",
-  //     video: "https://www.youtube.com/watch?v=-KvaDXIIzDA",
-  //     thumb: "/home/alumni/6.png"
-  //   },
-  //    {
-  //     name: "Samar Mohammed Omar Al Saggaf",
-  //     role: "Professor",
-  //     company: "King AbdulAziz University",
-  //     batch: "Cornell SELP - Class of Oct' 2023",
-  //     video: "https://www.youtube.com/watch?v=3IKavqqmcF4",
-  //     thumb: "/home/alumni/7.png"
-  //   },
-  //    {
-  //     name: "Samar Mohammed Omar Al Saggaf",
-  //     role: "Professor",
-  //     company: "King AbdulAziz University",
-  //     batch: "Cornell SELP - Class of Oct' 2023",
-  //     video: "https://www.youtube.com/watch?v=ln8XttL9Gcs",
-  //     thumb: "/home/alumni/8.png"
-  //    },
-  //    {
-  //     name: "Andre Sylvestre",
-  //     role: "Professor",
-  //     company: "Eber Petrochemical Group",
-  //     batch: "Cornell SELP - Class of Apr' 2024",
-  //     video: "https://youtube.com/shorts/MgC36CskSjc?si=rggPSugNB4-240xw",
-  //     thumb: "/home/alumni/9.png"
-  //   },
-  //   {
-  //     name: "Samar Mohammed Omar Al Saggaf",
-  //     role: "Professor",
-  //     company: "King AbdulAziz University",
-  //     batch: "Cornell SELP - Class of Oct' 2023",
-  //     video: "https://www.youtube.com/shorts/bk5HhxDONtY",
-  //     thumb: "/home/alumni/10.png"
-  //    },
-  //    {
-  //     name: "Samar Mohammed Omar Al Saggaf",
-  //     role: "Professor",
-  //     company: "King AbdulAziz University",
-  //     batch: "Cornell SELP - Class of Oct' 2023",
-  //     video: "https://www.youtube.com/shorts/TGBdPsj0BJw",
-  //     thumb: "/home/alumni/11.png"
-  //    },
+  if (isLoading) {
+    return <div className="text-center py-20 text-white">Loading...</div>;
+  }
 
-  // ];
   return (
     <section className="py-16 bg-[#1E73BE] text-white">
       <div className="max-w-7xl mx-auto px-4">
         <h2 className="text-4xl font-bold text-center mb-12">Alumni Speak</h2>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-10">
-          {alumniSpeak?.map((a, i) => {
-            const embedURL = a.video
-              .replace("watch?v=", "embed/")
-              .replace("shorts/", "embed/");
+          {alumniSpeak.map((a: any, i: number) => {
+            const embedURL = a.video_link
+              ?.replace("watch?v=", "embed/")
+              ?.replace("youtu.be/", "www.youtube.com/embed/")
+              ?.replace("shorts/", "www.youtube.com/embed/");
 
             return (
-              <div key={i} className="text-center">
-                
-                {/* If this card is playing video */}
+              <div key={a.id ?? i} className="text-center">
                 {playingIndex === i ? (
                   <iframe
                     className="w-full h-72 rounded-xl"
                     src={`${embedURL}?autoplay=1`}
                     allow="autoplay; encrypted-media"
-                  ></iframe>
+                    allowFullScreen
+                  />
                 ) : (
-                  /* Thumbnail */
                   <div
                     onClick={() => setPlayingIndex(i)}
                     className="relative group cursor-pointer rounded-xl overflow-hidden"
                   >
                     <img
-                      src={a.thumb}
-                      alt={a.name}
+                      src={a.thumbnail_image}
+                      alt={a.speaker_name}
                       className="w-full h-72 object-cover"
                     />
 
@@ -146,10 +59,13 @@ export default function AlumniSpeak({alumniSpeak}: {alumniSpeak: any[]}) {
                 )}
 
                 {/* Info */}
-                <h3 className="text-xl text-start font-semibold mt-4">{a.name}</h3>
-                <p className="text-md opacity-90 text-start">{a.role}</p>
+                <h3 className="text-xl text-start font-semibold mt-4">
+                  {a.speaker_name}
+                </h3>
                 <p className="text-md opacity-90 text-start">{a.company}</p>
-                <p className="text-md mt-1 opacity-90 text-start">{a.batch}</p>
+                <p className="text-md mt-1 opacity-90 text-start">
+                  {a.batch}
+                </p>
               </div>
             );
           })}

@@ -14,11 +14,11 @@ export async function fetchPrograms(): Promise<Program[]> {
   });
 
   if (!res.ok) {
-    console.error("Programs API failed:", res.status);
     throw new Error("Failed to fetch programs");
   }
 
   const json = await res.json();
+  console.log(json)
 
   // ✅ API safety
   return Array.isArray(json?.data) ? json.data : [];

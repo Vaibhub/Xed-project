@@ -10,12 +10,9 @@ import ParticipantWork from "./components/Home/sections/participant-work";
 import AlumniSpeak from "./components/Home/sections/AlumniSpeak";
 import UpskillForm from "./components/UpskillForm";
 import NewsCarousel from "./components/Home/sections/NewsCarousel";
+import EventsSlider from "./components/Events";
 import {
   dayPrograms,
-  testimonials,
-  alumniSpeak,
-  news,
-  collegeLogos,
 } from "./data";
 export default async function HomePage() {
   let programs: Program[] = [];
@@ -31,19 +28,21 @@ export default async function HomePage() {
     title: "Discover & Enroll",
     subtitle: "Explore Our Programs",
   };
+  console.log(programs,"======")
   return (
     <div>
       <HeroSection />
-      <CollegeWeProvide collegeLogos={collegeLogos} />
+      <CollegeWeProvide />
 
       <ExplorePrograms programs={programs} apiError={apiError} data={data} />
       <SeriesPrograms universityDayPrograms={dayPrograms} />
       <WhyWeAreBest />
-      <TestimonialSlider testimonials={testimonials} />
+      <TestimonialSlider />
       <ParticipantWork />
-      <AlumniSpeak alumniSpeak={alumniSpeak} />
+      <AlumniSpeak />
       <UpskillForm />
-      <NewsCarousel news={news} />
+      <EventsSlider />
+      <NewsCarousel />
     </div>
   );
 }
