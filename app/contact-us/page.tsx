@@ -6,6 +6,48 @@ import "react-phone-input-2/lib/style.css";
 
 export default function ContactUs() {
   const [phone, setPhone] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [formData, setFormData] = useState({
+    fullName: "",
+    organization: "",
+    email: "",
+    message: "",
+  });
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+
+    try {
+      const res = await fetch("/api/send-email", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          to: "admin@xedinstitute.org",
+          subject: "New Contact Us Submission",
+          text: `
+            Full Name: ${formData.fullName}
+            Organization: ${formData.organization}
+            Email: ${formData.email}
+            Phone: ${phone}
+            Message: ${formData.message}
+          `,
+        }),
+      });
+
+      if (res.ok) {
+        alert("Message sent successfully ✅");
+        setFormData({ fullName: "", organization: "", email: "", message: "" });
+        setPhone("");
+      } else {
+        alert("Failed to send message ❌");
+      }
+    } catch (error) {
+      alert("An error occurred ❌");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="w-full ">
@@ -29,7 +71,7 @@ export default function ContactUs() {
 
           {/* Form */}
           <section className="mt-8 bg-white">
-            <form className="w-full">
+            <form className="w-full" onSubmit={handleSubmit}>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
                 {/* Full Name */}
                 <div>
@@ -39,6 +81,10 @@ export default function ContactUs() {
                   <input
                     type="text"
                     required
+                    value={formData.fullName}
+                    onChange={(e) =>
+                      setFormData({ ...formData, fullName: e.target.value })
+                    }
                     className="w-full rounded-sm border border-slate-200 px-3 py-2 text-sm focus:ring-2 focus:ring-slate-300"
                   />
                 </div>
@@ -51,6 +97,10 @@ export default function ContactUs() {
                   <input
                     type="text"
                     required
+                    value={formData.organization}
+                    onChange={(e) =>
+                      setFormData({ ...formData, organization: e.target.value })
+                    }
                     className="w-full rounded-sm border border-slate-200 px-3 py-2 text-sm focus:ring-2 focus:ring-slate-300"
                   />
                 </div>
@@ -79,6 +129,10 @@ export default function ContactUs() {
                   <input
                     type="email"
                     required
+                    value={formData.email}
+                    onChange={(e) =>
+                      setFormData({ ...formData, email: e.target.value })
+                    }
                     className="w-full rounded-sm border border-slate-200 px-3 py-2 text-sm focus:ring-2 focus:ring-slate-300"
                   />
                 </div>
@@ -90,6 +144,10 @@ export default function ContactUs() {
                   </label>
                   <textarea
                     rows={6}
+                    value={formData.message}
+                    onChange={(e) =>
+                      setFormData({ ...formData, message: e.target.value })
+                    }
                     className="w-full rounded-sm border border-slate-200 px-3 py-2 text-sm focus:ring-2 focus:ring-slate-300"
                   />
                 </div>
@@ -98,9 +156,10 @@ export default function ContactUs() {
                 <div className="md:col-span-2">
                   <button
                     type="submit"
-                    className="bg-[rgb(40,115,184)] text-white p-3 text-lg font-bold rounded-sm"
+                    disabled={loading}
+                    className="bg-[rgb(40,115,184)] text-white p-3 text-lg font-bold rounded-sm disabled:opacity-50"
                   >
-                    Submit
+                    {loading ? "Submitting..." : "Submit"}
                   </button>
                 </div>
               </div>

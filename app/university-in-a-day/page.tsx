@@ -21,6 +21,7 @@ function UniversityInADayPage() {
 
     fetchData();
   }, []);
+  console.log(dayPrograms)
   return (
     <div>
       <HeroCommon
