@@ -5,6 +5,7 @@ import Image from "next/image";
 
 export default function CollegeWeProvide() {
   const { data: collegeLogos = [], isLoading } = useUniversityLogos();
+  const activeLogos = collegeLogos.filter((item: any) => item.is_active === "Y");
 
   if (isLoading) {
     return <div className="text-center py-10">Loading...</div>;
@@ -23,7 +24,7 @@ export default function CollegeWeProvide() {
           <div className="slide_college">
             <div className="college_logo">
               {/* First row */}
-              {collegeLogos?.map((item: any, i: number) => (
+              {activeLogos?.map((item: any, i: number) => (
                 <Image
                   key={`logo-1-${item.id ?? i}`}
                   src={item.logo_url?.trim()}
@@ -35,7 +36,7 @@ export default function CollegeWeProvide() {
               ))}
 
               {/* Duplicate row for infinite scroll */}
-              {collegeLogos?.map((item: any, i: number) => (
+              {activeLogos?.map((item: any, i: number) => (
                 <Image
                   key={`logo-2-${item.id ?? i}`}
                   src={item.logo_url?.trim()}

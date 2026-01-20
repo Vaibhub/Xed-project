@@ -10,6 +10,7 @@ import "swiper/css/navigation";
 
 export default function EventsSlider() {
   const { data: events = [], isLoading } = useEvents();
+  const activeEvents = events.filter((e: any) => e.is_active === "Y");
 
   if (isLoading) {
     return <div className="text-center py-16">Loading...</div>;
@@ -53,7 +54,7 @@ export default function EventsSlider() {
           }}
           className="rounded-lg"
         >
-          {events.map((e: any) => (
+          {activeEvents.map((e: any) => (
             <SwiperSlide key={e.id}>
               <div className="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow h-full">
                 <img

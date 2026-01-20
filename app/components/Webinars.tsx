@@ -110,6 +110,7 @@ import { Play } from "lucide-react";
 
 export default function WebinarsSlider() {
   const { data: webinars = [], isLoading } = useWebinars();
+  const activeWebinars = webinars.filter((w: any) => w.is_active === "Y");
   const [playingIndex, setPlayingIndex] = useState<number | null>(null);
 
   if (isLoading) {
@@ -147,7 +148,7 @@ export default function WebinarsSlider() {
             1024: { slidesPerView: 3 },
           }}
         >
-          {webinars.map((w: any, i: number) => {
+          {activeWebinars.map((w: any, i: number) => {
             const embedURL = w.video_link
               ?.replace("watch?v=", "embed/")
               ?.replace("youtu.be/", "www.youtube.com/embed/")

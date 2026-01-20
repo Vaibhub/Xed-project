@@ -14,6 +14,7 @@ import "swiper/css/navigation";
 
 export default function TestimonialSlider() {
   const { data: testimonials = [], isLoading } = useTestimonials();
+  const activeTestimonials = testimonials.filter((t: any) => t.is_active === "Y");
   const prevRef = useRef<HTMLDivElement | null>(null);
   const nextRef = useRef<HTMLDivElement | null>(null);
 
@@ -71,7 +72,7 @@ export default function TestimonialSlider() {
             1280: { slidesPerView: 4 },
           }}
         >
-          {testimonials.map((t: any) => (
+          {activeTestimonials.map((t: any) => (
             <SwiperSlide key={t.id}>
               <div className="bg-white rounded-xl border p-6 h-[350px] flex flex-col justify-between">
                 <p className="text-lg leading-relaxed italic font-bold">
