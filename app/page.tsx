@@ -19,11 +19,10 @@ export default async function HomePage() {
   let apiError = false;
 
   try {
-    programs = await fetchPrograms(); // ✅ clean call
+    programs = await fetchPrograms(); 
   } catch (error) {
     apiError = true;
   }
-   console.log(programs)
   const data = {
     title: "Discover & Enroll",
     subtitle: "Explore Our Programs",

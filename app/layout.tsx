@@ -3,6 +3,8 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import WepApp from "./components/webApp";
 import Providers from "./providers";
+import { fetchPrograms } from "@/lib/programs.server";
+import { Program } from "./types/programs";
 
 
 const geistSans = Geist({
@@ -20,18 +22,25 @@ export const metadata: Metadata = {
   description: "Learn to build web3 apps with Xed",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  let programs: Program[] = [];
+  try {
+    programs = await fetchPrograms();
+  } catch (error) {
+    console.error("Failed to fetch programs:", error);
+  }
+
   return (
     <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <Providers>
-          <WepApp>
+          <WepApp programs={programs}>
             {children}
           </WepApp>
         </Providers>

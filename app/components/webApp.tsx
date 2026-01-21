@@ -3,11 +3,14 @@
 import { usePathname } from "next/navigation";
 import Header from "./Header";
 import Footer from "./Footer";
+import { Program } from "../types/programs";
 
 export default function WepApp({
   children,
+  programs,
 }: {
   children: React.ReactNode;
+  programs: Program[];
 }) {
   const pathname = usePathname();
 
@@ -16,7 +19,7 @@ export default function WepApp({
 
   return (
     <div>
-      {!isAdminRoute && <Header />}
+      {!isAdminRoute && <Header programs={programs} />}
       {children}
       {!isAdminRoute && <Footer />}
     </div>

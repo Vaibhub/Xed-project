@@ -17,7 +17,6 @@ export default function NewsCarousel() {
   if (isLoading) {
     return <div className="text-center py-16">Loading...</div>;
   }
-  console.log(news,"=====")
 
   return (
     <section className="py-16 bg-gray-100">

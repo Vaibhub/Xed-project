@@ -38,6 +38,7 @@ interface ProgramCard {
 }
 
 export default function ExplorePrograms({ programs, apiError, data }: Props) {
+  console.log(programs)
   if (apiError) {
     return (
       <section className="py-16 bg-gray-50">
