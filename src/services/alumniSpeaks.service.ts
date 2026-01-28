@@ -36,3 +36,9 @@ export const updateAlumniSpeakStatus = (
 // DELETE
 export const deleteAlumniSpeak = (id: number) =>
   API.delete(`/admin/alumni-speaks/${id}`);
+
+// UPDATE ORDER (Drag & Drop)
+export const updateAlumniSpeaksOrder = (
+  data: { id: number; order_index: number }[]
+) =>
+  API.post("/admin/alumni-speaks/update-order", data);

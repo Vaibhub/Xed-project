@@ -1,4 +1,4 @@
-import { addAlumniSpeak, deleteAlumniSpeak, getAlumniSpeaks, updateAlumniSpeak, updateAlumniSpeakStatus } from "@/src/services/alumniSpeaks.service";
+import { addAlumniSpeak, deleteAlumniSpeak, getAlumniSpeaks, updateAlumniSpeak, updateAlumniSpeaksOrder, updateAlumniSpeakStatus } from "@/src/services/alumniSpeaks.service";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { CreateVideoTestimonialDto, UpdateVideoTestimonialDto } from "../types/VideoTestimonial";
 
@@ -84,6 +84,22 @@ export const useDeleteAlumniSpeak = () => {
 
   return useMutation({
     mutationFn: (id: number) => deleteAlumniSpeak(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["alumni-speaks"],
+      });
+    },
+  });
+};
+
+export const useUpdateAlumniSpeaksOrder = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (
+      data: { id: number; order_index: number }[]
+    ) => updateAlumniSpeaksOrder(data),
+
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ["alumni-speaks"],
