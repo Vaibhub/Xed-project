@@ -5,6 +5,7 @@ import {
   updateWebinar,
   updateWebinarStatus,
   deleteWebinar,
+  updateWebinarOrder,
 } from "@/src/services/webinars.service";
 import {
   CreateWebinarDto,
@@ -93,6 +94,23 @@ export const useDeleteWebinar = () => {
   return useMutation({
     mutationFn: (id: number) =>
       deleteWebinar(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["webinars"],
+      });
+    },
+  });
+};
+
+
+export const useUpdateWebinarsOrder = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (
+      data: { id: number; order_index: number }[]
+    ) => updateWebinarOrder(data),
+
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ["webinars"],

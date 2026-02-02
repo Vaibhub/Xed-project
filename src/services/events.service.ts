@@ -42,3 +42,9 @@ export const updateEventStatus = (
 ======================= */
 export const deleteEvent = (id: number) =>
   API.delete(`/admin/events/${id}`);
+
+// UPDATE ORDER (Drag & Drop)
+export const updateEventOrder = (
+  data: { id: number; order_index: number }[]
+) =>
+  API.post("/admin/events/update-order", data);

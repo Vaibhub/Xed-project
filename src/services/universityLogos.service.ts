@@ -15,3 +15,9 @@ export const updateLogoStatus = (id: string, status: boolean) =>
 
 export const deleteLogo = (id: string) =>
   API.delete(`/admin/university-logos/${id}`);
+
+
+export const updateUniversityOrder = (
+  data: { id: number; order_index: number }[]
+) =>
+  API.post("/admin/university-logos/update-order", data);

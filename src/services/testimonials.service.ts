@@ -42,3 +42,9 @@ export const updateTestimonialStatus = (
 ======================= */
 export const deleteTestimonial = (id: number) =>
   API.delete(`/admin/testimonials/${id}`);
+
+
+export const updateTestimonialsOrder = (
+  data: { id: number; order_index: number }[]
+) =>
+  API.post("/admin/testimonials/update-order", data);

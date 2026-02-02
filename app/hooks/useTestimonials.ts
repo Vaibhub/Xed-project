@@ -5,6 +5,7 @@ import {
   updateTestimonial,
   updateTestimonialStatus,
   deleteTestimonial,
+  updateTestimonialsOrder,
 } from "@/src/services/testimonials.service";
 import {
   CreateTestimonialDto,
@@ -94,6 +95,23 @@ export const useDeleteTestimonial = () => {
   return useMutation({
     mutationFn: (id: number) =>
       deleteTestimonial(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["testimonials"],
+      });
+    },
+  });
+};
+
+
+export const useUpdateTestimonialOrder = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (
+      data: { id: number; order_index: number }[]
+    ) => updateTestimonialsOrder(data),
+
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ["testimonials"],

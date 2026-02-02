@@ -3,7 +3,8 @@ import {
   getLogos, 
   addLogo, 
   updateLogoStatus, 
-  deleteLogo 
+  deleteLogo, 
+  updateUniversityOrder
 } from "@/src/services/universityLogos.service";
 import { CreateUniversityLogoDto } from "@/app/types/universityLogo";
 
@@ -47,6 +48,23 @@ export const useDeleteUniversityLogo = () => {
     mutationFn: (id: string) => deleteLogo(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["university-logos"] });
+    },
+  });
+};
+
+
+export const useUpdateUniversityOrder = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (
+      data: { id: number; order_index: number }[]
+    ) => updateUniversityOrder(data),
+
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["university-logos"],
+      });
     },
   });
 };

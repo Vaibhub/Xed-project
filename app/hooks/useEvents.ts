@@ -1,4 +1,4 @@
-import { addEvent, deleteEvent, getEvents, updateEvent, updateEventStatus } from "@/src/services/events.service";
+import { addEvent, deleteEvent, getEvents, updateEvent, updateEventOrder, updateEventStatus } from "@/src/services/events.service";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { CreateEventDto, UpdateEventDto } from "../types/events";
 
@@ -86,6 +86,23 @@ export const useDeleteEvent = () => {
   return useMutation({
     mutationFn: (id: number) =>
       deleteEvent(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["events"],
+      });
+    },
+  });
+};
+
+
+export const useUpdateEventsOrder = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (
+      data: { id: number; order_index: number }[]
+    ) => updateEventOrder(data),
+
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ["events"],

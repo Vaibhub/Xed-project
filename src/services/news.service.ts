@@ -42,3 +42,9 @@ export const updateNewsStatus = (
 ======================= */
 export const deleteNews = (id: number) =>
   API.delete(`/admin/news/${id}`);
+
+// UPDATE ORDER (Drag & Drop)
+export const updateNewsOrder = (
+  data: { id: number; order_index: number }[]
+) =>
+  API.post("/admin/news/update-order", data);

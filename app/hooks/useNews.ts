@@ -5,6 +5,7 @@ import {
   updateNews,
   updateNewsStatus,
   deleteNews,
+  updateNewsOrder,
 } from "@/src/services/news.service";
 import {
   CreateNewsDto,
@@ -94,6 +95,24 @@ export const useDeleteNews = () => {
   return useMutation({
     mutationFn: (id: number) =>
       deleteNews(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["news"],
+      });
+    },
+  });
+};
+
+
+
+export const useUpdateNewsOrder = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (
+      data: { id: number; order_index: number }[]
+    ) => updateNewsOrder(data),
+
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ["news"],

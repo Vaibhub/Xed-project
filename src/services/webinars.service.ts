@@ -42,3 +42,9 @@ export const updateWebinarStatus = (
 ======================= */
 export const deleteWebinar = (id: number) =>
   API.delete(`/admin/webinars/${id}`);
+
+
+export const updateWebinarOrder = (
+  data: { id: number; order_index: number }[]
+) =>
+  API.post("/admin/webinars/update-order", data);

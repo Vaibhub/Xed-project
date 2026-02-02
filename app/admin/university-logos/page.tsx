@@ -2,23 +2,168 @@
 
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Plus, Trash2, ImageIcon, Loader2 } from "lucide-react";
-import { useState } from "react";
+import { Plus, Trash2, ImageIcon, Loader2, GripVertical } from "lucide-react";
+import { useEffect, useState } from "react";
 import {
   useUniversityLogos,
   useAddUniversityLogo,
   useDeleteUniversityLogo,
   useUpdateUniversityLogoStatus,
+  useUpdateUniversityOrder,
 } from "@/app/hooks/useUniversityLogos";
+import { UniversityLogo } from "@/app/types/universityLogo";
+
+// 🔹 DND
+import {
+  DndContext,
+  closestCenter,
+} from "@dnd-kit/core";
+import {
+  SortableContext,
+  useSortable,
+  rectSortingStrategy,
+  arrayMove,
+} from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
+
+/* ============================
+   SORTABLE CARD
+============================ */
+function SortableLogoCard({
+  logo,
+  onToggleStatus,
+  onDelete,
+  updateStatusPending,
+  deleteLogoPending,
+}: {
+  logo: UniversityLogo;
+  onToggleStatus: (id: string, currentStatus: "Y" | "N") => void;
+  onDelete: (id: string) => void;
+  updateStatusPending: boolean;
+  deleteLogoPending: boolean;
+}) {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+  } = useSortable({ id: logo.id });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+  };
+
+  return (
+    <Card
+      ref={setNodeRef}
+      style={style}
+      className="p-6 hover:shadow-lg transition-shadow relative group"
+    >
+      {/* Drag Handle */}
+      <div 
+        className="absolute top-2 left-2 p-1 text-slate-300 cursor-grab active:cursor-grabbing opacity-0 group-hover:opacity-100 transition-opacity"
+        {...attributes}
+        {...listeners}
+      >
+        <GripVertical size={16} />
+      </div>
+
+      <div className="flex flex-col h-full">
+        <div className="flex items-center justify-center h-24 bg-slate-100 rounded-lg mb-4 overflow-hidden">
+          {logo.logo_url ? (
+            <img
+              alt={logo.name || "University logo"}
+              src={logo.logo_url}
+              className="h-full w-full object-contain"
+            />
+          ) : (
+            <ImageIcon size={40} className="text-slate-400" />
+          )}
+        </div>
+        <div className="flex items-center justify-between mb-1">
+          <h3 className="font-bold text-slate-900">{logo.name}</h3>
+          <span
+            className={`px-2 py-0.5 rounded-full text-[10px] font-semibold ${
+              logo.is_active === "Y"
+                ? "bg-green-100 text-green-700"
+                : "bg-red-100 text-red-700"
+            }`}
+          >
+            {logo.is_active === "Y" ? "Active" : "Inactive"}
+          </span>
+        </div>
+        <p className="text-xs text-slate-500 mb-4">
+          Added:{" "}
+          {logo.created_at
+            ? new Date(logo.created_at).toLocaleDateString()
+            : "N/A"}
+        </p>
+        <div className="flex gap-2 mt-auto">
+          <Button
+            size="sm"
+            variant="outline"
+            onClick={() => onToggleStatus(logo.id, logo.is_active)}
+            disabled={updateStatusPending}
+            className="flex-1 border-slate-200 text-slate-700 hover:bg-slate-100"
+          >
+            {logo.is_active === "Y" ? "Deactivate" : "Activate"}
+          </Button>
+
+          <Button
+            size="sm"
+            variant="outline"
+            onClick={() => onDelete(logo.id)}
+            disabled={deleteLogoPending}
+            className="flex-1 border-red-200 text-red-600 hover:bg-red-50"
+          >
+            <Trash2 size={16} />
+            {deleteLogoPending ? "Deleting..." : "Delete"}
+          </Button>
+        </div>
+      </div>
+    </Card>
+  );
+}
 
 export default function UniversityLogosPage() {
-  const { data: logos = [], isLoading, isError } = useUniversityLogos();
+  const { data: logosData = [], isLoading, isError } = useUniversityLogos();
   const addLogoMutation = useAddUniversityLogo();
   const deleteLogoMutation = useDeleteUniversityLogo();
   const updateStatusMutation = useUpdateUniversityLogoStatus();
+  const updateOrderMutation = useUpdateUniversityOrder();
 
+  const [logos, setLogos] = useState<UniversityLogo[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [formData, setFormData] = useState({ name: "", image_url: "" });
+
+  useEffect(() => {
+    setLogos(logosData);
+  }, [logosData]);
+
+  // Drag end
+  const handleDragEnd = (event: any) => {
+    const { active, over } = event;
+    if (!over || active.id === over.id) return;
+
+    setLogos((items) => {
+      const oldIndex = items.findIndex(i => i.id === active.id);
+      const newIndex = items.findIndex(i => i.id === over.id);
+
+      const newOrder = arrayMove(items, oldIndex, newIndex);
+
+      // 🔥 Backend payload
+      const payload = newOrder.map((item, index) => ({
+        id: Number(item.id),
+        order_index: index + 1,
+      }));
+
+      updateOrderMutation.mutate(payload);
+
+      return newOrder;
+    });
+  };
 
   const handleAddLogo = async () => {
     if (formData.name && formData.image_url) {
@@ -141,68 +286,28 @@ export default function UniversityLogosPage() {
 
       {/* Logos Grid */}
       {logos.length > 0 ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {logos.map((logo) => (
-            <Card
-              key={logo.id}
-              className="p-6 hover:shadow-lg transition-shadow"
-            >
-              <div className="flex flex-col h-full">
-                <div className="flex items-center justify-center h-24 bg-slate-100 rounded-lg mb-4 overflow-hidden">
-                  {logo.logo_url ? (
-                    <img
-                      alt={logo.name || "University logo"}
-                      src={logo.logo_url}
-                      className="h-full w-full object-contain"
-                    />
-                  ) : (
-                    <ImageIcon size={40} className="text-slate-400" />
-                  )}
-                </div>
-                <div className="flex items-center justify-between mb-1">
-                  <h3 className="font-bold text-slate-900">{logo.name}</h3>
-                  <span
-                    className={`px-2 py-0.5 rounded-full text-[10px] font-semibold ${
-                      logo.is_active === "Y"
-                        ? "bg-green-100 text-green-700"
-                        : "bg-red-100 text-red-700"
-                    }`}
-                  >
-                    {logo.is_active === "Y" ? "Active" : "Inactive"}
-                  </span>
-                </div>
-                <p className="text-xs text-slate-500 mb-4">
-                  Added:{" "}
-                  {logo.created_at
-                    ? new Date(logo.created_at).toLocaleDateString()
-                    : "N/A"}
-                </p>
-                <div className="flex gap-2 mt-auto">
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    onClick={() => handleToggleStatus(logo.id, logo.is_active)}
-                    disabled={updateStatusMutation.isPending}
-                    className="flex-1 border-slate-200 text-slate-700 hover:bg-slate-100"
-                  >
-                    {logo.is_active === "Y" ? "Deactivate" : "Activate"}
-                  </Button>
-
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    onClick={() => handleDelete(logo.id)}
-                    disabled={deleteLogoMutation.isPending}
-                    className="flex-1 border-red-200 text-red-600 hover:bg-red-50"
-                  >
-                    <Trash2 size={16} />
-                    {deleteLogoMutation.isPending ? "Deleting..." : "Delete"}
-                  </Button>
-                </div>
-              </div>
-            </Card>
-          ))}
-        </div>
+        <DndContext
+          collisionDetection={closestCenter}
+          onDragEnd={handleDragEnd}
+        >
+          <SortableContext
+            items={logos.map((i) => i.id)}
+            strategy={rectSortingStrategy}
+          >
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {logos.map((logo) => (
+                <SortableLogoCard
+                  key={logo.id}
+                  logo={logo}
+                  onToggleStatus={handleToggleStatus}
+                  onDelete={handleDelete}
+                  updateStatusPending={updateStatusMutation.isPending}
+                  deleteLogoPending={deleteLogoMutation.isPending}
+                />
+              ))}
+            </div>
+          </SortableContext>
+        </DndContext>
       ) : (
         <Card className="p-12 text-center">
           <ImageIcon size={48} className="mx-auto text-slate-400 mb-4" />
