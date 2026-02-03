@@ -14,10 +14,7 @@ import {
 import { UniversityLogo } from "@/app/types/universityLogo";
 
 // 🔹 DND
-import {
-  DndContext,
-  closestCenter,
-} from "@dnd-kit/core";
+import { DndContext, closestCenter } from "@dnd-kit/core";
 import {
   SortableContext,
   useSortable,
@@ -42,13 +39,8 @@ function SortableLogoCard({
   updateStatusPending: boolean;
   deleteLogoPending: boolean;
 }) {
-  const {
-    attributes,
-    listeners,
-    setNodeRef,
-    transform,
-    transition,
-  } = useSortable({ id: logo.id });
+  const { attributes, listeners, setNodeRef, transform, transition } =
+    useSortable({ id: logo.id });
 
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -62,7 +54,7 @@ function SortableLogoCard({
       className="p-6 hover:shadow-lg transition-shadow relative group"
     >
       {/* Drag Handle */}
-      <div 
+      <div
         className="absolute top-2 left-2 p-1 text-slate-300 cursor-grab active:cursor-grabbing opacity-0 group-hover:opacity-100 transition-opacity"
         {...attributes}
         {...listeners}
@@ -148,8 +140,8 @@ export default function UniversityLogosPage() {
     if (!over || active.id === over.id) return;
 
     setLogos((items) => {
-      const oldIndex = items.findIndex(i => i.id === active.id);
-      const newIndex = items.findIndex(i => i.id === over.id);
+      const oldIndex = items.findIndex((i) => i.id === active.id);
+      const newIndex = items.findIndex((i) => i.id === over.id);
 
       const newOrder = arrayMove(items, oldIndex, newIndex);
 
@@ -165,17 +157,20 @@ export default function UniversityLogosPage() {
     });
   };
 
-  const handleAddLogo = async () => {
-    if (formData.name && formData.image_url) {
-      await addLogoMutation.mutateAsync({
-        name: formData.name,
-        logo_url: formData.image_url,
-        is_active: "Y", 
-      });
-      setFormData({ name: "", image_url: "" });
-      setIsModalOpen(false);
-    }
-  };
+const handleAddLogo = async () => {
+  if (!formData.name || !formData.image_url) return;
+
+  const payload = new FormData();
+  payload.append("name", formData.name);
+  payload.append("logo", formData.image_url);
+  payload.append("is_active", "Y");
+
+  await addLogoMutation.mutateAsync(payload);
+
+  setFormData({ name: "", image_url: null });
+  setIsModalOpen(false);
+};
+
 
   const handleDelete = async (id: string) => {
     if (confirm("Are you sure you want to delete this logo?")) {
@@ -250,18 +245,21 @@ export default function UniversityLogosPage() {
               </div>
               <div>
                 <label className="block text-sm font-medium text-slate-700 mb-2">
-                  Logo URL
+                  Upload Logo
                 </label>
                 <input
-                  type="text"
-                  value={formData.image_url}
+                  type="file"
+                  accept="image/*"
                   onChange={(e) =>
-                    setFormData({ ...formData, image_url: e.target.value })
+                    setFormData({
+                      ...formData,
+                      image_url: e.target.files ? e.target.files[0] : null,
+                    })
                   }
-                  className="w-full px-4 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                  placeholder="https://..."
+                  className="w-full px-4 py-2 border border-slate-200 rounded-lg"
                 />
               </div>
+
               <div className="flex gap-3 justify-end pt-4">
                 <Button
                   onClick={() => setIsModalOpen(false)}
