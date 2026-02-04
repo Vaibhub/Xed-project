@@ -1,10 +1,10 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { 
-  getLogos, 
-  addLogo, 
-  updateLogoStatus, 
-  deleteLogo, 
-  updateUniversityOrder
+import {
+  getLogos,
+  addLogo,
+  updateLogoStatus,
+  deleteLogo,
+  updateUniversityOrder,
 } from "@/src/services/universityLogos.service";
 import { CreateUniversityLogoDto } from "@/app/types/universityLogo";
 
@@ -33,7 +33,7 @@ export const useUpdateUniversityLogoStatus = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ id, status }: { id: string; status: boolean }) => 
+    mutationFn: ({ id, status }: { id: string; status: boolean }) =>
       updateLogoStatus(id, status),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["university-logos"] });
@@ -52,14 +52,12 @@ export const useDeleteUniversityLogo = () => {
   });
 };
 
-
 export const useUpdateUniversityOrder = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (
-      data: { id: number; order_index: number }[]
-    ) => updateUniversityOrder(data),
+    mutationFn: (data: { id: number; order_index: number }[]) =>
+      updateUniversityOrder(data),
 
     onSuccess: () => {
       queryClient.invalidateQueries({

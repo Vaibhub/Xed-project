@@ -1,6 +1,12 @@
-import { addAlumniSpeak, deleteAlumniSpeak, getAlumniSpeaks, updateAlumniSpeak, updateAlumniSpeaksOrder, updateAlumniSpeakStatus } from "@/src/services/alumniSpeaks.service";
+import {
+  addAlumniSpeak,
+  deleteAlumniSpeak,
+  getAlumniSpeaks,
+  updateAlumniSpeak,
+  updateAlumniSpeaksOrder,
+  updateAlumniSpeakStatus,
+} from "@/src/services/alumniSpeaks.service";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { CreateVideoTestimonialDto, UpdateVideoTestimonialDto } from "../types/VideoTestimonial";
 
 /* =======================
    GET
@@ -22,8 +28,7 @@ export const useAddAlumniSpeak = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (data: CreateVideoTestimonialDto) =>
-      addAlumniSpeak(data),
+    mutationFn: (data: FormData) => addAlumniSpeak(data as any),
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ["alumni-speaks"],
@@ -39,13 +44,8 @@ export const useUpdateAlumniSpeak = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({
-      id,
-      data,
-    }: {
-      id: number;
-      data: UpdateVideoTestimonialDto;
-    }) => updateAlumniSpeak(id, data),
+    mutationFn: ({ id, data }: { id: number; data: FormData }) =>
+      updateAlumniSpeak(id, data as any),
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ["alumni-speaks"],
@@ -61,13 +61,8 @@ export const useUpdateAlumniSpeakStatus = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({
-      id,
-      status,
-    }: {
-      id: number;
-      status: boolean;
-    }) => updateAlumniSpeakStatus(id, status),
+    mutationFn: ({ id, status }: { id: number; status: boolean }) =>
+      updateAlumniSpeakStatus(id, status),
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ["alumni-speaks"],
@@ -96,9 +91,8 @@ export const useUpdateAlumniSpeaksOrder = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (
-      data: { id: number; order_index: number }[]
-    ) => updateAlumniSpeaksOrder(data),
+    mutationFn: (data: { id: number; order_index: number }[]) =>
+      updateAlumniSpeaksOrder(data),
 
     onSuccess: () => {
       queryClient.invalidateQueries({
