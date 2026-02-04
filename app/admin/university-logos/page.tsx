@@ -23,9 +23,7 @@ import {
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 
-/* ============================
-   SORTABLE CARD
-============================ */
+
 function SortableLogoCard({
   logo,
   onToggleStatus,
@@ -53,7 +51,6 @@ function SortableLogoCard({
       style={style}
       className="p-6 hover:shadow-lg transition-shadow relative group"
     >
-      {/* Drag Handle */}
       <div
         className="absolute top-2 left-2 p-1 text-slate-300 cursor-grab active:cursor-grabbing opacity-0 group-hover:opacity-100 transition-opacity"
         {...attributes}
@@ -128,8 +125,10 @@ export default function UniversityLogosPage() {
 
   const [logos, setLogos] = useState<UniversityLogo[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [formData, setFormData] = useState({ name: "", image_url: "" });
-
+const [formData, setFormData] = useState<{ name: string; logo_url: File | null }>({ 
+  name: "", 
+  logo_url: null 
+});
   useEffect(() => {
     setLogos(logosData);
   }, [logosData]);
@@ -142,10 +141,7 @@ export default function UniversityLogosPage() {
     setLogos((items) => {
       const oldIndex = items.findIndex((i) => i.id === active.id);
       const newIndex = items.findIndex((i) => i.id === over.id);
-
       const newOrder = arrayMove(items, oldIndex, newIndex);
-
-      // 🔥 Backend payload
       const payload = newOrder.map((item, index) => ({
         id: Number(item.id),
         order_index: index + 1,
@@ -158,16 +154,16 @@ export default function UniversityLogosPage() {
   };
 
 const handleAddLogo = async () => {
-  if (!formData.name || !formData.image_url) return;
+  if (!formData.name || !formData.logo_url) return;
 
   const payload = new FormData();
   payload.append("name", formData.name);
-  payload.append("logo", formData.image_url);
+  payload.append("logo_url", formData.logo_url); 
   payload.append("is_active", "Y");
 
-  await addLogoMutation.mutateAsync(payload);
+  await addLogoMutation.mutateAsync(payload as any);
 
-  setFormData({ name: "", image_url: null });
+  setFormData({ name: "", logo_url: null });
   setIsModalOpen(false);
 };
 
@@ -221,7 +217,6 @@ const handleAddLogo = async () => {
         </Button>
       </div>
 
-      {/* Add Logo Modal */}
       {isModalOpen && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
           <Card className="w-full max-w-md p-6">
@@ -253,7 +248,7 @@ const handleAddLogo = async () => {
                   onChange={(e) =>
                     setFormData({
                       ...formData,
-                      image_url: e.target.files ? e.target.files[0] : null,
+                      logo_url: e.target.files ? e.target.files[0] : null,
                     })
                   }
                   className="w-full px-4 py-2 border border-slate-200 rounded-lg"
@@ -282,7 +277,6 @@ const handleAddLogo = async () => {
         </div>
       )}
 
-      {/* Logos Grid */}
       {logos.length > 0 ? (
         <DndContext
           collisionDetection={closestCenter}

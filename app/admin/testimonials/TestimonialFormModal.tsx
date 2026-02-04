@@ -12,46 +12,95 @@ interface Props {
   editData?: Testimonial | null;
 }
 
-const INITIAL_STATE = {
+// 1. Form state ki proper type define karein
+interface FormState {
+  name: string;
+  designation: string;
+  message: string;
+  speaker_image: File | null; // Nayi image file ke liye
+  preview_url: string;        // Existing ya temporary image dikhane ke liye
+  is_active: "Y" | "N";
+}
+
+const INITIAL_STATE: FormState = {
   name: "",
   designation: "",
   message: "",
-  speaker_image: "",
-  is_active: "Y" as "Y" | "N",
+  speaker_image: null,
+  preview_url: "",
+  is_active: "Y",
 };
 
 export default function TestimonialFormModal({ open, onClose, editData }: Props) {
   const addTestimonial = useAddTestimonial();
   const updateTestimonial = useUpdateTestimonial();
-  const [form, setForm] = useState(INITIAL_STATE);
+  const [form, setForm] = useState<FormState>(INITIAL_STATE);
 
+  // 2. Sync editData with state properly
   useEffect(() => {
     if (open) {
-      setForm(editData ? { ...editData } : INITIAL_STATE);
+      if (editData) {
+        setForm({
+          name: editData.name || "",
+          designation: editData.designation || "",
+          message: editData.message || "",
+          speaker_image: null, // Edit mode mein purani image file nahi hoti, sirf URL hota hai
+          preview_url: editData.speaker_image || "", // Existing URL ko preview mein dalein
+          is_active: editData.is_active || "Y",
+        });
+      } else {
+        setForm(INITIAL_STATE);
+      }
     }
   }, [open, editData]);
 
   if (!open) return null;
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (editData) {
-      updateTestimonial.mutate({ id: editData.id, data: form });
-    } else {
-      addTestimonial.mutate(form);
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setForm((prev) => ({
+        ...prev,
+        speaker_image: file,
+        preview_url: URL.createObjectURL(file), // Binary file ka temporary URL banayein
+      }));
     }
-    onClose();
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    // 3. FormData logic
+    const payload = new FormData();
+    payload.append("name", form.name);
+    payload.append("designation", form.designation);
+    payload.append("message", form.message);
+    payload.append("is_active", form.is_active);
+    
+    // Agar user ne nayi file select ki hai tabhi bhejein
+    if (form.speaker_image) {
+      payload.append("speaker_image", form.speaker_image);
+    }
+
+    try {
+      if (editData) {
+        // cast to 'any' if your hook expects a DTO instead of FormData
+        await updateTestimonial.mutateAsync({ id: editData.id, data: payload as any });
+      } else {
+        await addTestimonial.mutateAsync(payload as any);
+      }
+      onClose();
+    } catch (error) {
+      console.error("Form Submission Error:", error);
+    }
   };
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-      {/* Overlay */}
       <div className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm" onClick={onClose} />
 
-      {/* Modal Container */}
       <div className="relative w-full max-w-lg bg-white rounded-xl shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-200">
         
-        {/* Header */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100">
           <h2 className="text-xl font-bold text-slate-800">
             {editData ? "Edit Testimonial" : "New Testimonial"}
@@ -62,14 +111,13 @@ export default function TestimonialFormModal({ open, onClose, editData }: Props)
         </div>
 
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
-          
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-1">
               <label className="text-xs font-semibold uppercase tracking-wider text-slate-500">Full Name</label>
               <input
-                placeholder="John Doe"
-                className="w-full border border-slate-200 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition-all"
+                className="w-full border border-slate-200 rounded-lg p-2.5 text-sm outline-none focus:border-blue-500"
                 value={form.name}
+                placeholder="Enter Full Name"
                 onChange={(e) => setForm({ ...form, name: e.target.value })}
                 required
               />
@@ -77,9 +125,9 @@ export default function TestimonialFormModal({ open, onClose, editData }: Props)
             <div className="space-y-1">
               <label className="text-xs font-semibold uppercase tracking-wider text-slate-500">Designation</label>
               <input
-                placeholder="CEO at TechCorp"
-                className="w-full border border-slate-200 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition-all"
+                className="w-full border border-slate-200 rounded-lg p-2.5 text-sm outline-none focus:border-blue-500"
                 value={form.designation}
+                placeholder="Enter Designation"
                 onChange={(e) => setForm({ ...form, designation: e.target.value })}
                 required
               />
@@ -89,38 +137,49 @@ export default function TestimonialFormModal({ open, onClose, editData }: Props)
           <div className="space-y-1">
             <label className="text-xs font-semibold uppercase tracking-wider text-slate-500">Message</label>
             <textarea
-              placeholder="Write the testimonial content here..."
               rows={4}
-              className="w-full border border-slate-200 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition-all resize-none"
+              className="w-full border border-slate-200 rounded-lg p-2.5 text-sm outline-none focus:border-blue-500 resize-none"
               value={form.message}
+              placeholder="Message"
               onChange={(e) => setForm({ ...form, message: e.target.value })}
               required
             />
           </div>
 
+          {/* 4. File Upload Section with Preview */}
           <div className="space-y-1">
-            <label className="text-xs font-semibold uppercase tracking-wider text-slate-500">Speaker Image URL</label>
-            <div className="flex gap-3 items-center">
-              <div className="h-10 w-10 rounded-full bg-slate-100 flex-shrink-0 overflow-hidden border border-slate-200">
-                {form.speaker_image ? (
-                  <img src={form.speaker_image} alt="Preview" className="h-full w-full object-cover" />
+            <label className="text-xs font-semibold uppercase tracking-wider text-slate-500">Speaker Image</label>
+            <div className="flex gap-4 items-center p-3 border border-dashed border-slate-200 rounded-lg">
+              <div className="h-16 w-16 rounded-full bg-slate-100 flex-shrink-0 overflow-hidden border border-slate-200">
+                {form.preview_url ? (
+                  <img src={form.preview_url} alt="Preview" className="h-full w-full object-cover" />
                 ) : (
                   <UserCircle className="h-full w-full text-slate-300" />
                 )}
               </div>
-              <input
-                placeholder="https://example.com/photo.jpg"
-                className="flex-1 border border-slate-200 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition-all"
-                value={form.speaker_image}
-                onChange={(e) => setForm({ ...form, speaker_image: e.target.value })}
-              />
+              
+              <div className="flex-1">
+                <input
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  id="image-upload"
+                  onChange={handleFileChange}
+                />
+                <label 
+                  htmlFor="image-upload" 
+                  className="inline-flex px-3 py-1.5 bg-slate-50 text-slate-700 text-xs font-medium rounded border border-slate-200 cursor-pointer hover:bg-slate-100"
+                >
+                  {form.speaker_image ? "Change Image" : "Choose Image"}
+                </label>
+              </div>
             </div>
           </div>
 
           <div className="space-y-1">
             <label className="text-xs font-semibold uppercase tracking-wider text-slate-500">Visibility Status</label>
             <select
-              className="w-full border border-slate-200 rounded-lg p-2.5 text-sm bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition-all"
+              className="w-full border border-slate-200 rounded-lg p-2.5 text-sm bg-white outline-none focus:border-blue-500"
               value={form.is_active}
               onChange={(e) => setForm({ ...form, is_active: e.target.value as "Y" | "N" })}
             >
@@ -129,17 +188,14 @@ export default function TestimonialFormModal({ open, onClose, editData }: Props)
             </select>
           </div>
 
-          {/* Footer Actions */}
-          <div className="flex justify-end gap-3 pt-4 mt-6 border-t border-slate-50">
-            <Button variant="ghost" type="button" onClick={onClose} className="text-slate-500">
-              Cancel
-            </Button>
+          <div className="flex justify-end gap-3 pt-4 border-t border-slate-50">
+            <Button variant="ghost" type="button" onClick={onClose}>Cancel</Button>
             <Button 
               type="submit" 
-              className="bg-blue-600 hover:bg-blue-700 text-white min-w-[100px]"
+              className="bg-blue-600 hover:bg-blue-700 text-white"
               disabled={addTestimonial.isPending || updateTestimonial.isPending}
             >
-              {editData ? "Update" : "Create"}
+              {addTestimonial.isPending || updateTestimonial.isPending ? "Saving..." : editData ? "Update" : "Create"}
             </Button>
           </div>
         </form>

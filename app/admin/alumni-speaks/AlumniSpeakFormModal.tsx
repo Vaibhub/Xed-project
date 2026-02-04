@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { X, User, Briefcase, GraduationCap, Video, Image as ImageIcon, CheckCircle2 } from "lucide-react";
+import { X, User, Briefcase, GraduationCap, Video, Image as ImageIcon, CheckCircle2, PlayCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { VideoTestimonial } from "@/app/types/VideoTestimonial";
 import { useAddAlumniSpeak, useUpdateAlumniSpeak } from "@/app/hooks/useAlumniSpeaks";
@@ -12,36 +12,102 @@ interface Props {
   editData?: VideoTestimonial | null;
 }
 
-const INITIAL_STATE = {
+interface AlumniFormState {
+  speaker_name: string;
+  company: string;
+  batch: string;
+  video_link: File | null;      // Naya field for video binary
+  video_preview: string;      // Video preview ke liye
+  thumbnail_image: File | null;
+  preview_url: string;
+  is_active: "Y" | "N";
+}
+
+const INITIAL_STATE: AlumniFormState = {
   speaker_name: "",
   company: "",
   batch: "",
-  video_link: "",
-  thumbnail_image: "",
-  is_active: "Y" as "Y" | "N",
+  video_link: null,
+  video_preview: "",
+  thumbnail_image: null,
+  preview_url: "",
+  is_active: "Y",
 };
 
 export default function AlumniSpeakFormModal({ open, onClose, editData }: Props) {
   const addMutation = useAddAlumniSpeak();
   const updateMutation = useUpdateAlumniSpeak();
-  const [form, setForm] = useState(INITIAL_STATE);
+  const [form, setForm] = useState<AlumniFormState>(INITIAL_STATE);
 
   useEffect(() => {
     if (open) {
-      setForm(editData ? { ...editData } : INITIAL_STATE);
+      if (editData) {
+        setForm({
+          speaker_name: editData.speaker_name || "",
+          company: editData.company || "",
+          batch: editData.batch || "",
+          video_link: null,
+          video_preview: (editData as any).video_link || "", 
+          thumbnail_image: null,
+          preview_url: editData.thumbnail_image || "",
+          is_active: editData.is_active || "Y",
+        });
+      } else {
+        setForm(INITIAL_STATE);
+      }
     }
   }, [open, editData]);
 
   if (!open) return null;
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (editData) {
-      updateMutation.mutate({ id: editData.id, data: form });
-    } else {
-      addMutation.mutate(form);
+  const handleVideoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setForm((prev) => ({
+        ...prev,
+        video_link: file,
+        video_preview: URL.createObjectURL(file),
+      }));
     }
-    onClose();
+  };
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setForm((prev) => ({
+        ...prev,
+        thumbnail_image: file,
+        preview_url: URL.createObjectURL(file),
+      }));
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    const payload = new FormData();
+    payload.append("speaker_name", form.speaker_name);
+    payload.append("company", form.company);
+    payload.append("batch", form.batch);
+    payload.append("is_active", form.is_active);
+
+    if (form.video_link) {
+      payload.append("video_link", form.video_link); // Ab file ja rahi hai
+    }
+    if (form.thumbnail_image) {
+      payload.append("thumbnail_image", form.thumbnail_image);
+    }
+
+    try {
+      if (editData) {
+        await updateMutation.mutateAsync({ id: editData.id, data: payload as any });
+      } else {
+        await addMutation.mutateAsync(payload as any);
+      }
+      onClose();
+    } catch (error) {
+      console.error("Upload failed:", error);
+    }
   };
 
   return (
@@ -49,122 +115,78 @@ export default function AlumniSpeakFormModal({ open, onClose, editData }: Props)
       <div className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm" onClick={onClose} />
 
       <div className="relative w-full max-w-lg bg-white rounded-2xl shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-200">
-        {/* Header */}
         <div className="flex items-center justify-between px-6 py-5 border-b border-slate-100 bg-emerald-50/30">
           <div className="flex items-center gap-3">
-            <div className="p-2 bg-emerald-600 rounded-lg text-white">
-              <GraduationCap size={20} />
-            </div>
-            <h2 className="text-xl font-bold text-slate-800">
-              {editData ? "Edit Alumni Story" : "Add Alumni Story"}
-            </h2>
+            <div className="p-2 bg-emerald-600 rounded-lg text-white"><GraduationCap size={20} /></div>
+            <h2 className="text-xl font-bold text-slate-800">{editData ? "Edit Alumni Story" : "Add Alumni Story"}</h2>
           </div>
-          <button onClick={onClose} className="p-1.5 hover:bg-white rounded-full transition-colors border border-transparent hover:border-slate-200">
-            <X size={20} className="text-slate-400" />
-          </button>
+          <button onClick={onClose} className="p-1.5 hover:bg-white rounded-full transition-colors border border-transparent hover:border-slate-200"><X size={20} className="text-slate-400" /></button>
         </div>
 
-        <form onSubmit={handleSubmit} className="p-6 space-y-5">
-          {/* Identity Section */}
+        <form onSubmit={handleSubmit} className="p-6 space-y-5 max-h-[80vh] overflow-y-auto">
+          {/* Identity Fields */}
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <div className="sm:col-span-2 space-y-1">
-              <label className="text-xs font-bold text-slate-500 uppercase flex items-center gap-2">
-                <User size={14} /> Alumnus Name
-              </label>
-              <input
-                placeholder="Full Name"
-                className="w-full border border-slate-200 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 outline-none transition-all"
-                value={form.speaker_name}
-                onChange={(e) => setForm({ ...form, speaker_name: e.target.value })}
-                required
-              />
+              <label className="text-xs font-bold text-slate-500 uppercase flex items-center gap-2"><User size={14} /> Alumnus Name</label>
+              <input className="w-full border border-slate-200 rounded-lg p-2.5 text-sm outline-none focus:border-emerald-500" value={form.speaker_name} onChange={(e) => setForm({ ...form, speaker_name: e.target.value })} required />
             </div>
             <div className="space-y-1">
-              <label className="text-xs font-bold text-slate-500 uppercase flex items-center gap-2">
-                <Briefcase size={14} /> Company
-              </label>
-              <input
-                placeholder="e.g. Google"
-                className="w-full border border-slate-200 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 outline-none"
-                value={form.company}
-                onChange={(e) => setForm({ ...form, company: e.target.value })}
-              />
+              <label className="text-xs font-bold text-slate-500 uppercase flex items-center gap-2"><Briefcase size={14} /> Company</label>
+              <input className="w-full border border-slate-200 rounded-lg p-2.5 text-sm outline-none focus:border-emerald-500" value={form.company} onChange={(e) => setForm({ ...form, company: e.target.value })} />
             </div>
             <div className="space-y-1">
-              <label className="text-xs font-bold text-slate-500 uppercase flex items-center gap-2">
-                <GraduationCap size={14} /> Batch
-              </label>
-              <input
-                placeholder="e.g. 2018 - 2022"
-                className="w-full border border-slate-200 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 outline-none"
-                value={form.batch}
-                onChange={(e) => setForm({ ...form, batch: e.target.value })}
-              />
+              <label className="text-xs font-bold text-slate-500 uppercase flex items-center gap-2"><GraduationCap size={14} /> Batch</label>
+              <input className="w-full border border-slate-200 rounded-lg p-2.5 text-sm outline-none focus:border-emerald-500" value={form.batch} onChange={(e) => setForm({ ...form, batch: e.target.value })} />
             </div>
           </div>
 
-          {/* Media Section */}
           <div className="space-y-4 pt-4 border-t border-slate-100">
+            {/* 🎥 Video Upload Section */}
             <div className="space-y-1">
-              <label className="text-xs font-bold text-slate-500 uppercase flex items-center gap-2">
-                <Video size={14} /> Video Link
-              </label>
-              <input
-                placeholder="YouTube or Vimeo URL"
-                className="w-full border border-slate-200 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 outline-none"
-                value={form.video_link}
-                onChange={(e) => setForm({ ...form, video_link: e.target.value })}
-                required
-              />
+              <label className="text-xs font-bold text-slate-500 uppercase flex items-center gap-2"><Video size={14} /> Upload Video</label>
+              <div className="p-3 border border-dashed border-slate-200 rounded-xl bg-slate-50/50">
+                {form.video_preview && (
+                  <video src={form.video_preview} className="w-full h-32 object-cover rounded-lg mb-2 bg-black" controls />
+                )}
+                <div className="flex items-center gap-3">
+                  <input type="file" accept="video/*" id="video-upload" className="hidden" onChange={handleVideoChange} />
+                  <label htmlFor="video-upload" className="cursor-pointer flex items-center gap-2 px-3 py-1.5 bg-white border border-slate-200 text-slate-700 text-xs font-semibold rounded-md hover:bg-slate-50">
+                    <PlayCircle size={14} /> {form.video_link ? "Change Video" : "Select Video File"}
+                  </label>
+                  <span className="text-[10px] text-slate-400 truncate max-w-[150px]">{form.video_link?.name}</span>
+                </div>
+              </div>
             </div>
 
+            {/* 🖼️ Thumbnail Upload Section */}
             <div className="space-y-1">
-              <label className="text-xs font-bold text-slate-500 uppercase flex items-center gap-2">
-                <ImageIcon size={14} /> Thumbnail Preview
-              </label>
-              <div className="flex gap-4">
-                <div className="h-16 w-24 rounded-lg bg-slate-50 border-2 border-dashed border-slate-200 flex-shrink-0 overflow-hidden flex items-center justify-center">
-                  {form.thumbnail_image ? (
-                    <img src={form.thumbnail_image} className="h-full w-full object-cover" />
-                  ) : (
-                    <Video size={20} className="text-slate-300" />
-                  )}
+              <label className="text-xs font-bold text-slate-500 uppercase flex items-center gap-2"><ImageIcon size={14} /> Thumbnail Image</label>
+              <div className="flex gap-4 items-center p-3 border border-dashed border-slate-200 rounded-xl">
+                <div className="h-16 w-24 rounded-lg bg-slate-50 flex-shrink-0 overflow-hidden border border-slate-100">
+                  {form.preview_url ? <img src={form.preview_url} className="h-full w-full object-cover" /> : <div className="h-full w-full flex items-center justify-center text-slate-300"><ImageIcon size={24} /></div>}
                 </div>
-                <input
-                  placeholder="Thumbnail URL"
-                  className="flex-1 border border-slate-200 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-emerald-500/20 outline-none h-fit self-center"
-                  value={form.thumbnail_image}
-                  onChange={(e) => setForm({ ...form, thumbnail_image: e.target.value })}
-                />
+                <div className="flex-1">
+                  <input type="file" accept="image/*" id="thumbnail-upload" className="hidden" onChange={handleImageChange} />
+                  <label htmlFor="thumbnail-upload" className="cursor-pointer inline-flex items-center px-3 py-1.5 bg-emerald-50 text-emerald-700 text-xs font-semibold rounded-md hover:bg-emerald-100">
+                    {form.thumbnail_image ? "Change Image" : "Upload Thumbnail"}
+                  </label>
+                </div>
               </div>
             </div>
           </div>
 
           <div className="pt-2">
-            <label className="text-xs font-bold text-slate-500 uppercase flex items-center gap-2 mb-1">
-              <CheckCircle2 size={14} /> Display Status
-            </label>
-            <select
-              className="w-full border border-slate-200 rounded-lg p-2.5 text-sm bg-white focus:ring-2 focus:ring-emerald-500/20 outline-none"
-              value={form.is_active}
-              onChange={(e) => setForm({ ...form, is_active: e.target.value as "Y" | "N" })}
-            >
-              <option value="Y">Active (Visible on Site)</option>
-              <option value="N">Inactive (Hidden)</option>
+            <label className="text-xs font-bold text-slate-500 uppercase mb-1 flex items-center gap-2"><CheckCircle2 size={14} /> Display Status</label>
+            <select className="w-full border border-slate-200 rounded-lg p-2.5 text-sm bg-white outline-none focus:ring-2 focus:ring-emerald-500/20" value={form.is_active} onChange={(e) => setForm({ ...form, is_active: e.target.value as "Y" | "N" })}>
+              <option value="Y">Active</option>
+              <option value="N">Inactive</option>
             </select>
           </div>
 
-          {/* Actions */}
           <div className="flex justify-end gap-3 pt-6 border-t border-slate-50">
-            <Button variant="ghost" type="button" onClick={onClose} className="text-slate-500">
-              Cancel
-            </Button>
-            <Button 
-              type="submit" 
-              className="bg-emerald-600 hover:bg-emerald-700 text-white px-8 shadow-lg shadow-emerald-100 transition-all active:scale-95"
-              disabled={addMutation.isPending || updateMutation.isPending}
-            >
-              {editData ? "Save Changes" : "Publish Story"}
+            <Button variant="ghost" type="button" onClick={onClose}>Cancel</Button>
+            <Button type="submit" className="bg-emerald-600 hover:bg-emerald-700 text-white px-8" disabled={addMutation.isPending || updateMutation.isPending}>
+              {addMutation.isPending || updateMutation.isPending ? "Uploading..." : editData ? "Save Changes" : "Publish Story"}
             </Button>
           </div>
         </form>

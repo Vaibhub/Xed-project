@@ -7,6 +7,7 @@ import { useTestimonials } from "@/app/hooks/useTestimonials";
 
 import "swiper/css";
 import "swiper/css/navigation";
+import Image from "next/image";
 
 /* =========================
    Component
@@ -80,7 +81,9 @@ export default function TestimonialSlider() {
                 </p>
 
                 <div className="mt-6 pt-6 border-t flex items-center gap-3">
-                  <img
+                  <Image
+                  height={50}
+                  width={50}
                     src={t.speaker_image?.trim()}
                     alt={t.name}
                     className="w-12 h-12 rounded-full object-cover"
