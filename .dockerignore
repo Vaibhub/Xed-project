@@ -3,3 +3,9 @@ node_modules
 .log
 
 .tem
+
+.env
+
+.env
+
+./app/node_modules
