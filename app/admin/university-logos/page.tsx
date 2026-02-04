@@ -23,7 +23,6 @@ import {
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 
-
 function SortableLogoCard({
   logo,
   onToggleStatus,
@@ -125,10 +124,13 @@ export default function UniversityLogosPage() {
 
   const [logos, setLogos] = useState<UniversityLogo[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
-const [formData, setFormData] = useState<{ name: string; logo_url: File | null }>({ 
-  name: "", 
-  logo_url: null 
-});
+  const [formData, setFormData] = useState<{
+    name: string;
+    logo_url: File | null;
+  }>({
+    name: "",
+    logo_url: null,
+  });
   useEffect(() => {
     setLogos(logosData);
   }, [logosData]);
@@ -153,20 +155,19 @@ const [formData, setFormData] = useState<{ name: string; logo_url: File | null }
     });
   };
 
-const handleAddLogo = async () => {
-  if (!formData.name || !formData.logo_url) return;
+  const handleAddLogo = async () => {
+    if (!formData.name || !formData.logo_url) return;
 
-  const payload = new FormData();
-  payload.append("name", formData.name);
-  payload.append("logo_url", formData.logo_url); 
-  payload.append("is_active", "Y");
+    const payload = new FormData();
+    payload.append("name", formData.name);
+    payload.append("logo_url", formData.logo_url);
+    payload.append("is_active", "Y");
 
-  await addLogoMutation.mutateAsync(payload as any);
+    await addLogoMutation.mutateAsync(payload as any);
 
-  setFormData({ name: "", logo_url: null });
-  setIsModalOpen(false);
-};
-
+    setFormData({ name: "", logo_url: null });
+    setIsModalOpen(false);
+  };
 
   const handleDelete = async (id: string) => {
     if (confirm("Are you sure you want to delete this logo?")) {

@@ -18,7 +18,6 @@ export async function fetchPrograms(): Promise<Program[]> {
   }
 
   const json = await res.json();
-  console.log(json)
 
   // ✅ API safety
   return Array.isArray(json?.data) ? json.data : [];

@@ -1,13 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import {
-  X,
-  Video,
-  User,
-  Image as ImageIcon,
-  PlayCircle,
-} from "lucide-react";
+import { X, Video, User, Image as ImageIcon, PlayCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Webinar } from "@/app/types/Webinar";
 import { useAddWebinar, useUpdateWebinar } from "@/app/hooks/useWebinars";
@@ -23,7 +17,7 @@ interface WebinarFormState {
   university_name: string;
   speaker_image: File | null;
   thumbnail_image: File | null;
-  video_file: File | null;
+  video_link: string;
   is_active: "Y" | "N";
   // Previews
   speaker_preview: string;
@@ -37,7 +31,7 @@ const INITIAL_STATE: WebinarFormState = {
   university_name: "",
   speaker_image: null,
   thumbnail_image: null,
-  video_file: null,
+  video_link: "",
   is_active: "Y",
   speaker_preview: "",
   thumbnail_preview: "",
@@ -59,6 +53,8 @@ export default function WebinarFormModal({ open, onClose, editData }: Props) {
           university_name: editData.university_name || "",
           is_active: editData.is_active || "Y",
           speaker_preview: editData.speaker_image || "",
+          video_link: editData.video_link || "",
+
           thumbnail_preview: editData.thumbnail_image || "",
           video_preview: (editData as any).video_link || "",
         });
@@ -72,12 +68,12 @@ export default function WebinarFormModal({ open, onClose, editData }: Props) {
 
   const handleFileChange = (
     e: React.ChangeEvent<HTMLInputElement>,
-    field: "speaker_image" | "thumbnail_image" | "video_file",
+    field: "speaker_image" | "thumbnail_image" | "video_link",
   ) => {
     const file = e.target.files?.[0];
     if (file) {
       const previewKey =
-        field === "video_file"
+        field === "video_link"
           ? "video_preview"
           : field === "speaker_image"
             ? "speaker_preview"
@@ -98,12 +94,12 @@ export default function WebinarFormModal({ open, onClose, editData }: Props) {
     payload.append("speaker_name", form.speaker_name);
     payload.append("university_name", form.university_name);
     payload.append("is_active", form.is_active);
+    payload.append("video_link", form.video_link);
 
     // Matching backend keys in upload.fields
     if (form.speaker_image) payload.append("speaker_image", form.speaker_image);
     if (form.thumbnail_image)
       payload.append("thumbnail_image", form.thumbnail_image);
-    if (form.video_file) payload.append("video", form.video_file); 
 
     try {
       if (editData) {
@@ -165,35 +161,19 @@ export default function WebinarFormModal({ open, onClose, editData }: Props) {
               />
             </div>
 
-            <div className="space-y-2">
+            <div className="space-y-1">
               <label className="text-xs font-medium text-slate-700">
-                Webinar Video
+                Video Url
               </label>
-              <div className="border-2 border-dashed border-slate-200 rounded-lg p-4 bg-slate-50/50">
-                {form.video_preview && (
-                  <video
-                    src={form.video_preview}
-                    className="w-full h-32 rounded bg-black mb-3"
-                    controls
-                  />
-                )}
-                <div className="flex items-center gap-3">
-                  <input
-                    type="file"
-                    accept="video/*"
-                    id="v-file"
-                    className="hidden"
-                    onChange={(e) => handleFileChange(e, "video_file")}
-                  />
-                  <label
-                    htmlFor="v-file"
-                    className="cursor-pointer flex items-center gap-2 px-4 py-2 bg-white border rounded text-xs font-semibold hover:bg-slate-50"
-                  >
-                    <PlayCircle size={14} />{" "}
-                    {form.video_file ? "Change Video" : "Upload Video File"}
-                  </label>
-                </div>
-              </div>
+              <input
+                className="w-full border border-slate-200 rounded-lg p-2.5 text-sm focus:border-blue-500 outline-none"
+                value={form.video_link}
+                placeholder="Video url"
+                onChange={(e) =>
+                  setForm({ ...form, video_link: e.target.value })
+                }
+                required
+              />
             </div>
           </div>
 
